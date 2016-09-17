@@ -40,10 +40,7 @@ class DbComparator
         $this->_password = $password;
         try {
             $this->connection();
-            $result = $this->_database->query('SHOW TABLES')->fetch_all();
-            foreach ($result as $item) {
-                $this->_tables[] = $item[0];
-            }
+            $this->getTables();
         } catch (\Exception $e) {
             $this->errors[] = $e;
             throw new \Exception($e->getMessage());
@@ -63,11 +60,29 @@ class DbComparator
         }
     }
 
+    private function getTables()
+    {
+        $result = $this->_database->query('SHOW TABLES')->fetch_all();
+        foreach ($result as $item) {
+            $res = $this->_database->query("SHOW COLUMNS FROM " . $item[0])->fetch_array();
+            $this->_tables[$item[0]]['Field']   = $res['Field'];
+            $this->_tables[$item[0]]['Type']    = $res['Type'];
+            $this->_tables[$item[0]]['Null']    = $res['Null'];
+            $this->_tables[$item[0]]['Key']     = $res['Key'];
+            $this->_tables[$item[0]]['Default'] = $res['Default'];
+            $this->_tables[$item[0]]['Extra']   = $res['Extra'];
+        }
+    }
+
     public function showTables()
     {
         echo '<h3>Tables of ' . $this->_dbName . ':</h3>';
-        foreach ($this->_tables as $table) {
-            echo $table . '<br>';
+        foreach ($this->_tables as $key => $table) {
+            echo '<ul><strong>' . $key . '</strong><br>';
+            foreach ($table as $col => $val) {
+                echo '<li><font size="2" >' . $col . ' - ' . $val . '</font>';
+            }
+            echo '</ul>';
         }
     }
 
