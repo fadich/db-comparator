@@ -9,13 +9,15 @@ namespace Comparator;
  */
 class DbComparator
 {
+    /** $database is mysqli object
+     * @var  \mysqli
+     */
+    private $_database;
     private $_host;
     private $_dbName;
     private $_username;
     private $_password;
-
-    /** @var  \mysqli $database is mysqli object*/
-    private $_database;
+    private $_tables = [];
     private $errors = [];
 
     /**
@@ -38,6 +40,10 @@ class DbComparator
         $this->_password = $password;
         try {
             $this->connection();
+            $result = $this->_database->query('SHOW TABLES')->fetch_all();
+            foreach ($result as $item) {
+                $this->_tables[] = $item[0];
+            }
         } catch (\Exception $e) {
             $this->errors[] = $e;
             throw new \Exception($e->getMessage());
@@ -59,12 +65,9 @@ class DbComparator
 
     public function showTables()
     {
-        $result = $this->_database->query('SHOW TABLES')->fetch_all();
         echo '<h3>Tables of ' . $this->_dbName . ':</h3>';
-        foreach ($result as $res) {
-            foreach ($res as $re) {
-                echo $re . '<br>';
-            }
+        foreach ($this->_tables as $table) {
+            echo $table . '<br>';
         }
     }
 
