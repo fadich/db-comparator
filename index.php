@@ -33,6 +33,7 @@ if (!empty($databasesCon)): ?>
                     <h2 class="structure-title">
                         Structure of <?= $databaseCon[2] ?>
                         <span onclick="hide(<?= $i ?>)" id="span-<?= $i ?>"
+                              title="Show/hide info about structure of ''<?= $databaseCon[2] ?>''"
                               class="btn-hide">(show)</span>
                     </h2>
                     <div class="structure-body" id="div-<?= $i++ ?>" hidden="hidden">
