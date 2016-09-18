@@ -5,7 +5,7 @@
 
 .btn-hide {
     margin-left:        10px;
-    font-size:          15px;
+    font-size:          18px;
     color:              #5555CC;
     float:              right;
 }
@@ -25,11 +25,28 @@
     padding-left:       30px;
     padding-right:      50px;
     border-radius:      10px;
-    background-color:   rgba(150, 150, 150, 0.2);
+    background-color:   rgba(150, 150, 200, 0.25);
 }
 
 .structure-body {
-    padding:            10px 80px;
     border-radius:      5px;
-    background-color:   rgba(150, 150, 150, 0.1);
+    padding:            10px 80px;
+    border:             solid;
+    border-width:       1px;
+    background-color:   rgba(150, 150, 200, 0.2);
+}
+
+.difference-result {
+    padding-top:        10px;
+    padding-bottom:     30px;
+    padding-left:       80px;
+    padding-right:      80px;
+    border-radius:      25px;
+    border:             solid;
+    border-width:       1px;
+    background-color:   rgba(150, 150, 200, 0.2);
+}
+
+.difference-result:hover {
+    background-color:   rgba(150, 150, 200, 0.35);
 }

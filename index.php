@@ -31,7 +31,7 @@ if (!empty($databasesCon)): ?>
             if (!$db->hasErrors()):
                 if ($content = $db->getContent()): ?>
                     <h2 class="structure-title">
-                        Structure of <?= $databaseCon[2] ?>
+                        Structure of "<?= $databaseCon[2] ?>"
                         <span onclick="hide(<?= $i ?>)" id="span-<?= $i ?>"
                               title="Show/hide info about structure of ''<?= $databaseCon[2] ?>''"
                               class="btn-hide">(show)</span>
@@ -50,13 +50,15 @@ if (!empty($databasesCon)): ?>
                         <?php endforeach; ?>
                     </div>
                 <?php else: ?>
-                    Database <?= $databaseCon[1] ?>is empty
+                    <h2 class="structure-title">
+                        <font color="#CC5555" size="4">Database "<?= $databaseCon[2] ?>" is empty</font>
+                    </h2>
                 <?php endif;
             else:
             endif;
         endforeach;
         } catch (\Exception $e) {
-            echo '<br>' . $e->getMessage();
+            echo '<br><font color="#CC5555" size="4">' . $e->getMessage() . '</font>';
         }
     $length = sizeof($bases);
     if ($length > 1): ?>
@@ -65,30 +67,32 @@ if (!empty($databasesCon)): ?>
         <?php for ($i = 0; $i < $length; $i++):
             for ($j = $i + 1; $j < $length; $j++):
                 if ($i !== $j): ?>
-                    <h2 align="center">Comparison <?= $bases[$i]->getDbName() ?>
-                        and <?= $bases[$j]->getDbName() ?></h2>
-                    <?php $compareResult[$i] = $bases[$i]->compare($bases[$j]);
-                    $compareResult[$j] = $bases[$j]->compare($bases[$i]); ?>
-                    <table>
-                        <tr>
-                        <?php if (!empty($compareResult[$i])): ?>
-                            <td class="table-td">
-                                <font size="4"><strong>Database <?= $bases[$i]->getDbName() ?> has:</strong></font><br>
-                                <?php displayResult($compareResult[$i]); ?>
-                            </td>
+                    <div class="difference-result">
+                        <h2 align="center">Comparison "<?= $bases[$i]->getDbName() ?>"
+                            and "<?= $bases[$j]->getDbName() ?>"</h2>
+                        <?php $compareResult[$i] = $bases[$i]->compare($bases[$j]);
+                        $compareResult[$j] = $bases[$j]->compare($bases[$i]); ?>
+                        <table>
+                            <tr>
+                            <?php if (!empty($compareResult[$i])): ?>
+                                <td class="table-td">
+                                    <font size="4"><strong>Database "<?= $bases[$i]->getDbName() ?>" has:</strong></font><br>
+                                    <?php displayResult($compareResult[$i]); ?>
+                                </td>
+                            <?php endif; ?>
+                            <?php if (!empty($compareResult[$j])): ?>
+                                <td class="table-td">
+                                    <font size="4"><strong>Database "<?= $bases[$j]->getDbName() ?>" has:</strong></font><br>
+                                    <?php displayResult($compareResult[$j]); ?>
+                                </td>
+                            <?php endif; ?>
+                                </tr>
+                        </table>
+                        <?php if (empty($compareResult[$i]) && empty($compareResult[$j])): ?>
+                            <h2 align="center"><font size="4" color="green">Databases are identical</font></h2>
                         <?php endif; ?>
-                        <?php if (!empty($compareResult[$j])): ?>
-                            <td class="table-td">
-                                <font size="4"><strong>Database <?= $bases[$j]->getDbName() ?> has:</strong></font><br>
-                                <?php displayResult($compareResult[$j]); ?>
-                            </td>
-                        <?php endif; ?>
-                            </tr>
-                    </table>
-                    <?php if (empty($compareResult[$i]) && empty($compareResult[$j])): ?>
-                        <h2><font size="4" color="green">Databases are identical</font></h2>
-                    <?php endif;
-                endif;
+                    </div>
+                <?php endif;
             endfor;
         endfor;
     endif;

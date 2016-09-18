@@ -43,7 +43,7 @@ class DbComparator
             $this->getTables();
         } catch (\Exception $e) {
             $this->_errors[] = $e;
-            throw new \Exception('<font color="#CC5555" size="4">' . $e->getMessage() . '</font>');
+            throw new \Exception($e->getMessage());
         }
     }
 
