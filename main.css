@@ -1,0 +1,35 @@
+.head {
+    text-align:         center;
+    font-size:          32px;
+}
+
+.btn-hide {
+    margin-left:        10px;
+    font-size:          15px;
+    color:              #5555CC;
+    float:              right;
+}
+
+.btn-hide:hover {
+    color:              #8888FF;
+}
+
+.table-td {
+    width:              50vw;
+    text-align:         center;
+}
+
+.structure-title {
+    min-height:         40px;
+    padding-top:        10px;
+    padding-left:       30px;
+    padding-right:      50px;
+    border-radius:      10px;
+    background-color:   rgba(150, 150, 150, 0.2);
+}
+
+.structure-body {
+    padding:            10px 80px;
+    border-radius:      5px;
+    background-color:   rgba(150, 150, 150, 0.1);
+}

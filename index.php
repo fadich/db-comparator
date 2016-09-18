@@ -2,9 +2,16 @@
 include_once ('DbComparator.php');
 
 use Comparator\DbComparator; ?>
-<h1 align="center">Database comparator</h1>
+<html>
+<head>
+    <title>Database comparator</title>
+    <script src="main.js"></script>
+    <link   href="main.css" rel="stylesheet">
+</head>
+<body>
+<div class="head">Database comparator</div>
 <?php if (empty($_GET)): ?>
-    <!-- Hello message --><hr>
+    <!-- Hello message -->
     <li>Please, enter params for database connection via GET request.<br>
     <li>Set value of any GET-variable as a string having the structure "[host]%%[username]%%[database]%%[password]".<br>
 <?php else:
@@ -16,26 +23,28 @@ use Comparator\DbComparator; ?>
 endif;
 
 if (!empty($databasesCon)): ?>
-    <hr>
+    <!--  Getting info about databases  -->
     <?php try {
-            foreach ($databasesCon as $databaseCon):
+        $i = 0;
+        foreach ($databasesCon as $databaseCon):
             $bases[] = $db = new DbComparator($databaseCon[0], $databaseCon[1], $databaseCon[2], $databaseCon[3]);
             if (!$db->hasErrors()):
                 if ($content = $db->getContent()): ?>
-                    <h2>
+                    <h2 class="structure-title">
                         Structure of <?= $databaseCon[2] ?>
-                        <span onclick="hide()" class="" style="font-size: 15px;color: #5555CC;margin-left: 20px">Show</span>
+                        <span onclick="hide(<?= $i ?>)" id="span-<?= $i ?>"
+                              class="btn-hide">(show)</span>
                     </h2>
-                    <div hidden>
+                    <div class="structure-body" id="div-<?= $i++ ?>" hidden="hidden">
                         <?php foreach ($content as $key => $table): ?>
                             <ul><font size="4"><strong><?= $key ?></strong></font><br>
-                            <?php foreach ($table as $column => $value): ?>
-                                <ul><font size="3"><strong><?= $column ?></strong></font>
-                                <?php foreach ($value as $col =>  $val): ?>
-                                    <li><font size="2"><?= $col ?> - <?= $val ?></font>
+                                <?php foreach ($table as $column => $value): ?>
+                                    <br><ul><font size="3"><strong><?= $column ?></strong></font>
+                                        <?php foreach ($value as $col => $val): ?>
+                                        <li><font size="2"><?= $col ?> - <?= $val ?></font>
+                                            <?php endforeach; ?>
+                                    </ul>
                                 <?php endforeach; ?>
-                                </ul>
-                            <?php endforeach; ?>
                             </ul>
                         <?php endforeach; ?>
                     </div>
@@ -50,6 +59,7 @@ if (!empty($databasesCon)): ?>
         }
     $length = sizeof($bases);
     if ($length > 1): ?>
+    <!--    Getting info about difference    -->
         <hr>
         <?php for ($i = 0; $i < $length; $i++):
             for ($j = $i + 1; $j < $length; $j++):
@@ -61,13 +71,13 @@ if (!empty($databasesCon)): ?>
                     <table>
                         <tr>
                         <?php if (!empty($compareResult[$i])): ?>
-                            <td style="width: 50vw" align="center">
+                            <td class="table-td">
                                 <font size="4"><strong>Database <?= $bases[$i]->getDbName() ?> has:</strong></font><br>
                                 <?php displayResult($compareResult[$i]); ?>
                             </td>
                         <?php endif; ?>
                         <?php if (!empty($compareResult[$j])): ?>
-                            <td style="width: 50vw" align="center">
+                            <td class="table-td">
                                 <font size="4"><strong>Database <?= $bases[$j]->getDbName() ?> has:</strong></font><br>
                                 <?php displayResult($compareResult[$j]); ?>
                             </td>
@@ -81,9 +91,10 @@ if (!empty($databasesCon)): ?>
             endfor;
         endfor;
     endif;
-endif;
-
-function displayResult($compare)
+endif; ?>
+</body>
+</html>
+<?php function displayResult($compare)
 {
     foreach ($compare as $key => $table):
         if (!is_array($table)): ?>
@@ -103,8 +114,4 @@ function displayResult($compare)
         endif;
     endforeach;
 } ?>
-    <script>
-        function hide() {
-            alert('123');
-        }
 
