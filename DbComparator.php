@@ -116,13 +116,18 @@ class DbComparator
                         foreach ($column as $k => $type) {
                             if ($db->_tables[$key][$ke][$k] !== $this->_tables[$key][$ke][$k]){
                                 $types[] = 'type of column <strong>' . $ke .
-                                    '</strong> is <font color="#CC5555">' . $k . ' - ' . $type . '</font>';
+                                    '</strong> (in table <strong>' . $key . '</strong>) is <font color="#CC5555">' .
+                                    $k . ' - ' . $type . '</font>';
                             }
                         }
-                        $columns[] = isset($types) ? implode('<li>', $types) : null;
+                        if (isset($types)) {
+                            $columns[] = implode('<li>', $types);
+                        }
                     }
                 }
-                $result[] = isset($columns) ? implode('<li>', $columns) : null;
+                if (isset($columns)) {
+                    $result[] = implode('<li>', $columns);
+                }
             }
         }
         return isset($result) ? '<ul>' . implode('<li>', $result) . '</ul>' : false;
