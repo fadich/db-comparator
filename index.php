@@ -22,18 +22,23 @@ if (!empty($databasesCon)): ?>
             $bases[] = $db = new DbComparator($databaseCon[0], $databaseCon[1], $databaseCon[2], $databaseCon[3]);
             if (!$db->hasErrors()):
                 if ($content = $db->getContent()): ?>
-                    <h2>Tables of <?= $databaseCon[1] ?>:</h2>
-                    <?php foreach ($content as $key => $table): ?>
-                        <ul><font size="4"><strong><?= $key ?></strong></font><br>
-                        <?php foreach ($table as $column => $value): ?>
-                            <ul><font size="3"><strong><?= $column ?></strong></font>
-                            <?php foreach ($value as $col =>  $val): ?>
-                                <li><font size="2"><?= $col ?> - <?= $val ?></font>
+                    <h2>
+                        Structure of <?= $databaseCon[2] ?>
+                        <span onclick="hide()" class="" style="font-size: 15px;color: #5555CC;margin-left: 20px">Show</span>
+                    </h2>
+                    <div hidden>
+                        <?php foreach ($content as $key => $table): ?>
+                            <ul><font size="4"><strong><?= $key ?></strong></font><br>
+                            <?php foreach ($table as $column => $value): ?>
+                                <ul><font size="3"><strong><?= $column ?></strong></font>
+                                <?php foreach ($value as $col =>  $val): ?>
+                                    <li><font size="2"><?= $col ?> - <?= $val ?></font>
+                                <?php endforeach; ?>
+                                </ul>
                             <?php endforeach; ?>
                             </ul>
                         <?php endforeach; ?>
-                        </ul>
-                    <?php endforeach; ?>
+                    </div>
                 <?php else: ?>
                     Database <?= $databaseCon[1] ?>is empty
                 <?php endif;
@@ -97,4 +102,9 @@ function displayResult($compare)
             endforeach;
         endif;
     endforeach;
-}
+} ?>
+    <script>
+        function hide() {
+            alert('123');
+        }
+

@@ -18,7 +18,7 @@ class DbComparator
     private $_username;
     private $_password;
     private $_errors = [];
-    private $_contents = [];
+    private $_structure = [];
 
     /**
      * DbComparator constructor.
@@ -66,18 +66,18 @@ class DbComparator
         foreach ($result as $item) {
             $res = $this->_database->query("SHOW COLUMNS FROM " . $item[0])->fetch_all();
             foreach ($res as $re) {
-                $this->_contents[$item[0]][$re[0]]['Type']     = $re[1];
-                $this->_contents[$item[0]][$re[0]]['Null']     = $re[2];
-                $this->_contents[$item[0]][$re[0]]['Key']      = $re[3];
-                $this->_contents[$item[0]][$re[0]]['Default']  = $re[4];
-                $this->_contents[$item[0]][$re[0]]['Extra']    = $re[5];
+                $this->_structure[$item[0]][$re[0]]['Type']     = $re[1];
+                $this->_structure[$item[0]][$re[0]]['Null']     = $re[2];
+                $this->_structure[$item[0]][$re[0]]['Key']      = $re[3];
+                $this->_structure[$item[0]][$re[0]]['Default']  = $re[4];
+                $this->_structure[$item[0]][$re[0]]['Extra']    = $re[5];
             }
         }
     }
 
     public function getContent()
     {
-        return !empty($this->_contents) ? $this->_contents : false;
+        return !empty($this->_structure) ? $this->_structure : false;
     }
     
     /** @return bool */
@@ -93,16 +93,16 @@ class DbComparator
     
     public function compare(DbComparator $db)
     {
-        foreach ($this->_contents as $key => $table){
-            if (!isset($db->_contents[$key])) {
+        foreach ($this->_structure as $key => $table){
+            if (!isset($db->_structure[$key])) {
                 $result[$key] = $key;
             } else {
                 foreach ($table as $ke => $column) {
-                    if (!isset($db->_contents[$key][$ke])){
+                    if (!isset($db->_structure[$key][$ke])){
                         $result[$key][$ke] = $ke;
                     } else {
                         foreach ($column as $k => $type) {
-                            if ($db->_contents[$key][$ke][$k] !== $this->_contents[$key][$ke][$k]){
+                            if ($db->_structure[$key][$ke][$k] !== $this->_structure[$key][$ke][$k]){
                                 $result[$key][$ke][$k] = $type;
                             }
                         }
