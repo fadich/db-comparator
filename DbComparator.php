@@ -18,7 +18,7 @@ class DbComparator
     private $_username;
     private $_password;
     private $_errors = [];
-    private $_tables = [];
+    private $_contents = [];
 
     /**
      * DbComparator constructor.
@@ -66,29 +66,18 @@ class DbComparator
         foreach ($result as $item) {
             $res = $this->_database->query("SHOW COLUMNS FROM " . $item[0])->fetch_all();
             foreach ($res as $re) {
-                $this->_tables[$item[0]][$re[0]]['Type']     = $re[1];
-                $this->_tables[$item[0]][$re[0]]['Null']     = $re[2];
-                $this->_tables[$item[0]][$re[0]]['Key']      = $re[3];
-                $this->_tables[$item[0]][$re[0]]['Default']  = $re[4];
-                $this->_tables[$item[0]][$re[0]]['Extra']    = $re[5];
+                $this->_contents[$item[0]][$re[0]]['Type']     = $re[1];
+                $this->_contents[$item[0]][$re[0]]['Null']     = $re[2];
+                $this->_contents[$item[0]][$re[0]]['Key']      = $re[3];
+                $this->_contents[$item[0]][$re[0]]['Default']  = $re[4];
+                $this->_contents[$item[0]][$re[0]]['Extra']    = $re[5];
             }
         }
     }
 
-    public function showTables()
+    public function getContent()
     {
-        echo '<h2>Tables of ' . $this->_dbName . ':</h2>';
-        foreach ($this->_tables as $key => $table) {
-            echo '<ul><font size="4"><strong>' . $key . '</strong></font><br>';
-            foreach ($table as $column => $value) {
-                echo '<ul><font size="3"><strong>' . $column . ':</strong></font>';
-                foreach ($value as $col =>  $val) {
-                    echo '<li><font size="2">' . $col . ' - ' . $val . '</font>';
-                }
-                echo '</ul>';
-            }
-            echo '</ul>';
-        }
+        return !empty($this->_contents) ? $this->_contents : false;
     }
     
     /** @return bool */
@@ -104,32 +93,36 @@ class DbComparator
     
     public function compare(DbComparator $db)
     {
-        foreach ($this->_tables as $key => $table){
-            if (!isset($db->_tables[$key])) {
-                $result[] = '<li>table <strong><font color="#CC5555">' . $key . '</font></strong>';
+        foreach ($this->_contents as $key => $table){
+            if (!isset($db->_contents[$key])) {
+                $result[$key] = $key;
             } else {
                 foreach ($table as $ke => $column) {
-                    if (!isset($db->_tables[$key][$ke])){
-                        $columns[] = 'column <strong><font color="#CC5555">' . $ke . '</font></strong> in table <strong>' .
-                            $key . '</strong>';
+                    if (!isset($db->_contents[$key][$ke])){
+                        $result[$key][$ke] = $ke;
                     } else {
                         foreach ($column as $k => $type) {
-                            if ($db->_tables[$key][$ke][$k] !== $this->_tables[$key][$ke][$k]){
-                                $types[] = 'type of column <strong>' . $ke .
-                                    '</strong> (in table <strong>' . $key . '</strong>) is <font color="#CC5555">' .
-                                    $k . ' - ' . $type . '</font>';
+                            if ($db->_contents[$key][$ke][$k] !== $this->_contents[$key][$ke][$k]){
+                                $result[$key][$ke][$k] = $type;
                             }
-                        }
-                        if (isset($types)) {
-                            $columns[] = implode('<li>', $types);
                         }
                     }
                 }
-                if (isset($columns)) {
-                    $result[] = implode('<li>', $columns);
-                }
             }
         }
-        return isset($result) ? '<ul>' . implode('<li>', $result) . '</ul>' : false;
+        return isset($result) ? $result : false;
     }
 }
+
+/*
+
+'table <strong><font color="#CC5555">' . $key . '</font></strong>'
+
+
+ 'column <strong><font color="#CC5555">' . $ke . '</font></strong> in table <strong>' .
+                            $key . '</strong>'
+
+'type of column <strong>' . $ke .
+                                    '</strong> (in table <strong>' . $key . '</strong>) is <font color="#CC5555">' .
+                                    $k . ' - ' . $type . '</font>'
+ */
