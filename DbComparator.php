@@ -113,16 +113,3 @@ class DbComparator
         return isset($result) ? $result : false;
     }
 }
-
-/*
-
-'table <strong><font color="#CC5555">' . $key . '</font></strong>'
-
-
- 'column <strong><font color="#CC5555">' . $ke . '</font></strong> in table <strong>' .
-                            $key . '</strong>'
-
-'type of column <strong>' . $ke .
-                                    '</strong> (in table <strong>' . $key . '</strong>) is <font color="#CC5555">' .
-                                    $k . ' - ' . $type . '</font>'
- */
