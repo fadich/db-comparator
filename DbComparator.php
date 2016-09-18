@@ -17,8 +17,8 @@ class DbComparator
     private $_dbName;
     private $_username;
     private $_password;
+    private $_errors = [];
     private $_tables = [];
-    private $errors = [];
 
     /**
      * DbComparator constructor.
@@ -42,7 +42,7 @@ class DbComparator
             $this->connection();
             $this->getTables();
         } catch (\Exception $e) {
-            $this->errors[] = $e;
+            $this->_errors[] = $e;
             throw new \Exception('<font color="#CC5555" size="4">' . $e->getMessage() . '</font>');
         }
     }
@@ -64,36 +64,57 @@ class DbComparator
     {
         $result = $this->_database->query('SHOW TABLES')->fetch_all();
         foreach ($result as $item) {
-            $res = $this->_database->query("SHOW COLUMNS FROM " . $item[0])->fetch_array();
-            $this->_tables[$item[0]]['Field']   = $res['Field'];
-            $this->_tables[$item[0]]['Type']    = $res['Type'];
-            $this->_tables[$item[0]]['Null']    = $res['Null'];
-            $this->_tables[$item[0]]['Key']     = $res['Key'];
-            $this->_tables[$item[0]]['Default'] = $res['Default'];
-            $this->_tables[$item[0]]['Extra']   = $res['Extra'];
+            $res = $this->_database->query("SHOW COLUMNS FROM " . $item[0])->fetch_all();
+            foreach ($res as $re) {
+                $this->_tables[$item[0]][$re[0]]['Type']     = $re[1];
+                $this->_tables[$item[0]][$re[0]]['Null']     = $re[2];
+                $this->_tables[$item[0]][$re[0]]['Key']      = $re[3];
+                $this->_tables[$item[0]][$re[0]]['Default']  = $re[4];
+                $this->_tables[$item[0]][$re[0]]['Extra']    = $re[5];
+            }
         }
     }
 
     public function showTables()
     {
-        echo '<h3>Tables of ' . $this->_dbName . ':</h3>';
+        echo '<h2>Tables of ' . $this->_dbName . ':</h2>';
         foreach ($this->_tables as $key => $table) {
-            echo '<ul><strong>' . $key . '</strong><br>';
-            foreach ($table as $col => $val) {
-                echo '<li><font size="2" >' . $col . ' - ' . $val . '</font>';
+            echo '<ul><font size="4"><strong>' . $key . '</strong></font><br>';
+            foreach ($table as $column => $value) {
+                echo '<ul><font size="3"><strong>' . $column . ':</strong></font>';
+                foreach ($value as $col =>  $val) {
+                    echo '<li><font size="2">' . $col . ' - ' . $val . '</font>';
+                }
+                echo '</ul>';
             }
             echo '</ul>';
         }
     }
-
+    
     /** @return bool */
     public function hasErrors()
     {
-        return !empty($this->errors);
+        return !empty($this->_errors);
     }
 
+    public function getDbName()
+    {
+        return $this->_dbName;
+    }
+    
     public function compare(DbComparator $db)
     {
-        
+        foreach ($this->_tables as $key => $table){
+            if (!isset($db->_tables[$key])) {
+                $result[] = '<li>table ' . $key;
+            } else {
+                foreach ($table as $k => $column) {
+                    if (!isset($db->_tables[$key][$k])){
+                        $result[][] = 'column ' . $column;
+                    }
+                }
+            }
+        }
+        return isset($result) ? implode('<br>', $result) : false;
     }
 }
