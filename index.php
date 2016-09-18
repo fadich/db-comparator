@@ -36,7 +36,7 @@ if (!empty($databasesCon)):
                         . ' and ' . $bases[$j]->getDbName() . '</h2>';
                     $compareResult = $bases[$i]->compare($bases[$j]);
                     echo $compareResult ?
-                        '<font size="4"><strong>Database ' . $bases[$i]->getDbName() . ' has:</strong></font><br>' :
+                        '<font size="4"><strong>Database ' . $bases[$i]->getDbName() . ' has:</strong></font><br>' . $compareResult :
                         '<h3 align="center"><font size="4" color="green">Identical databases.</font></h3>';
                 }
             }

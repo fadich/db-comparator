@@ -106,15 +106,25 @@ class DbComparator
     {
         foreach ($this->_tables as $key => $table){
             if (!isset($db->_tables[$key])) {
-                $result[] = '<li>table ' . $key;
+                $result[] = '<li>table <strong><font color="#CC5555">' . $key . '</font></strong>';
             } else {
-                foreach ($table as $k => $column) {
-                    if (!isset($db->_tables[$key][$k])){
-                        $result[][] = 'column ' . $column;
+                foreach ($table as $ke => $column) {
+                    if (!isset($db->_tables[$key][$ke])){
+                        $columns[] = 'column <strong><font color="#CC5555">' . $ke . '</font></strong> in table <strong>' .
+                            $key . '</strong>';
+                    } else {
+                        foreach ($column as $k => $type) {
+                            if ($db->_tables[$key][$ke][$k] !== $this->_tables[$key][$ke][$k]){
+                                $types[] = 'type of column <strong>' . $ke .
+                                    '</strong> is <font color="#CC5555">' . $k . ' - ' . $type . '</font>';
+                            }
+                        }
+                        $columns[] = isset($types) ? implode('<li>', $types) : null;
                     }
                 }
+                $result[] = isset($columns) ? implode('<li>', $columns) : null;
             }
         }
-        return isset($result) ? implode('<br>', $result) : false;
+        return isset($result) ? '<ul>' . implode('<li>', $result) . '</ul>' : false;
     }
 }
