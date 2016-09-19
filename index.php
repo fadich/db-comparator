@@ -11,7 +11,7 @@ use Comparator\DbComparator; ?>
 <body>
 <div class="head">Database comparator</div>
 <?php if (empty($_GET)): ?>
-    <!-- Hello message -->
+    <!-- Hello message --><hr>
     <li>Please, enter params for database connection via GET request.<br>
     <li>Set value of any GET-variable as a string having the structure "[host]%%[username]%%[database]%%[password]".<br>
 <?php else:
@@ -27,7 +27,7 @@ if (!empty($databasesCon)): ?>
     <?php try {
         $i = 0;
         foreach ($databasesCon as $databaseCon):
-            $bases[] = $db = new DbComparator($databaseCon[0], $databaseCon[1], $databaseCon[2], $databaseCon[3]);
+            $bases[] = $db = new DbComparator($databaseCon[0] ?? null, $databaseCon[1] ?? null, $databaseCon[2] ?? null, $databaseCon[3] ?? null);
             if (!$db->hasErrors()):
                 if ($content = $db->getContent()): ?>
                     <h2 class="structure-title">
@@ -60,7 +60,7 @@ if (!empty($databasesCon)): ?>
         } catch (\Exception $e) {
             echo '<br><font color="#CC5555" size="4">' . $e->getMessage() . '</font>';
         }
-    $length = sizeof($bases);
+    $length = sizeof($bases ?? []);
     if ($length > 1): ?>
     <!--    Getting info about difference    -->
         <hr>
@@ -99,6 +99,8 @@ if (!empty($databasesCon)): ?>
 endif; ?>
 </body>
 </html>
+
+
 <?php function displayResult($compare)
 {
     foreach ($compare as $key => $table):
