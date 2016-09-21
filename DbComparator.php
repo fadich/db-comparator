@@ -17,7 +17,7 @@ class DbComparator
     private $_dbName;
     private $_username;
     private $_password;
-    private $_errors = [];
+    private $_errors    = [];
     private $_structure = [];
 
     /**
@@ -31,13 +31,11 @@ class DbComparator
      */
     public function __construct($host = false, $username = false, $dbName = false, $password = null)
     {
-        if (!($host && $username && $dbName)) {
-            throw new \Exception('Incorrect connection params.');
-        }
         $this->_host     = $host;
         $this->_username = $username;
         $this->_dbName   = $dbName;
         $this->_password = $password;
+        $this->validate();
         try {
             $this->connection();
             $this->getTables();
@@ -53,10 +51,14 @@ class DbComparator
      */
     private function connection()
     {
+        if ($this->hasErrors()) {
+            throw new \Exception('Error connection to ' . $this->_username . '@' . $this->_host);
+        }
         mysqli_report(MYSQLI_REPORT_STRICT);
         $this->_database = new \mysqli($this->_host, $this->_username, $this->_password, $this->_dbName);
         if ($this->_database->connect_error) {
-            throw new \Exception('Can not connect to ' . $this->_username . '@' . $this->_host);
+            $this->_errors[]   = 'Error connection to ' . $this->_username . '@' . $this->_host;
+            throw new \Exception('Error connection to ' . $this->_username . '@' . $this->_host);
         }
     }
 
@@ -111,5 +113,32 @@ class DbComparator
             }
         }
         return isset($result) ? $result : false;
+    }
+
+    private function validate()
+    {
+        if (!($this->_host && $this->_username && $this->_dbName)) {
+            $this->_errors[] = "Missed required connection params.";
+        }
+        $pattern = '/^[a-zA-Z0-9\-\_\.]+$/i';
+        if (!preg_match($pattern, $this->_host)) {
+            $this->_errors[] = "Param host has prohibited symbols.";
+        }
+        if (!preg_match($pattern, $this->_username)) {
+            $this->_errors[] = "Param username has prohibited symbols.";
+        }
+        if (!preg_match($pattern, $this->_dbName)) {
+            $this->_errors[] = "Param dbName has prohibited symbols.";
+        }
+        if ($this->_password) {
+            if (!preg_match($pattern, $this->_password)) {
+                $this->_errors[] = "Param password has prohibited symbols.";
+            }
+        }
+    }
+    
+    public function getErrors()
+    {
+        return $this->_errors;
     }
 }

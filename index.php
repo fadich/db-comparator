@@ -1,12 +1,12 @@
 <?php
-include_once ('DbComparator.php');
+include_once('DbComparator.php');
 
 use Comparator\DbComparator; ?>
 <html>
 <head>
     <title>Database comparator</title>
     <script src="main.js"></script>
-    <link   href="main.css" rel="stylesheet">
+    <link href="main.css" rel="stylesheet">
 </head>
 <body>
 <div class="head">Database comparator</div>
@@ -15,15 +15,17 @@ use Comparator\DbComparator; ?>
     <li>Please, enter params for database connection via GET request.<br>
     <li>Set value of any GET-variable as a string having the structure "[host]%%[username]%%[database]%%[password]".<br>
 <?php else:
-    foreach ($_GET as $item)
-    {
-        $connection = explode('%%', $item);
-        $databasesCon[] = $connection;
+    try {
+        foreach ($_GET as $item) {
+            $databasesCon[] = explode('%%', $item);
+        }
+    } catch (\Exception $e) {
+        die("" . $e->getMessage());
     }
 endif;
 
 if (!empty($databasesCon)): ?>
-    <!--  Getting info about databases  -->
+    <!--  Getting info about databases structures -->
     <?php try {
         $i = 0;
         foreach ($databasesCon as $databaseCon):
@@ -54,8 +56,9 @@ if (!empty($databasesCon)): ?>
                         <font color="#CC5555" size="4">Database "<?= $databaseCon[2] ?>" is empty</font>
                     </h2>
                 <?php endif;
-            else:
-            endif;
+            else: ?>
+    <font color="#CC5555"><?= implode('<br>', $db->getErrors()); ?></font>
+            <?php endif;
         endforeach;
         } catch (\Exception $e) {
             echo '<br><font color="#CC5555" size="4">' . $e->getMessage() . '</font>';
