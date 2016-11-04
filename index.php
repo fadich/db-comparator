@@ -33,9 +33,9 @@ if (!empty($databasesCon)): ?>
             if (!$db->hasErrors()):
                 if ($content = $db->getContent()): ?>
                     <h2 class="structure-title">
-                        Structure of "<?= $databaseCon[2] ?>"
+                        Structure of "<?= $databaseCon[0] . "@" .$databaseCon[2] ?>"
                         <span onclick="hide(<?= $i ?>)" id="span-<?= $i ?>"
-                              title="Show/hide info about structure of ''<?= $databaseCon[2] ?>''"
+                              title="Show/hide info about structure of <?= $databaseCon[0] . "@" .$databaseCon[2] ?>"
                               class="btn-hide">(show)</span>
                     </h2>
                     <div class="structure-body" id="div-<?= $i++ ?>" hidden="hidden">
@@ -53,7 +53,7 @@ if (!empty($databasesCon)): ?>
                     </div>
                 <?php else: ?>
                     <h2 class="structure-title">
-                        <font color="#CC5555" size="4">Database "<?= $databaseCon[2] ?>" is empty</font>
+                        <font color="#CC5555" size="4">Database "<?= $databaseCon[0] . "@" .$databaseCon[2] ?>" is empty</font>
                     </h2>
                 <?php endif;
             else: ?>

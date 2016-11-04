@@ -90,7 +90,7 @@ class DbComparator
 
     public function getDbName()
     {
-        return $this->_dbName;
+        return $this->_host . "@" . $this->_dbName;
     }
     
     public function compare(DbComparator $db)
