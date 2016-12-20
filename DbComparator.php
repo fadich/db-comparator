@@ -22,12 +22,13 @@ class DbComparator
 
     /**
      * DbComparator constructor.
-     *  
+     *
      * @param bool $host
      * @param bool $username
      * @param bool $dbName
      * @param null $password
-     * @throws \Exception
+     *
+     * @throws \Throwable
      */
     public function __construct($host = false, $username = false, $dbName = false, $password = null)
     {
@@ -39,14 +40,15 @@ class DbComparator
         try {
             $this->connection();
             $this->getTables();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->_errors[] = $e;
-            throw new \Exception($e->getMessage());
+            throw $e;
         }
     }
 
     /**
      * Connect to database
+     *
      * @throws \Exception
      */
     private function connection()

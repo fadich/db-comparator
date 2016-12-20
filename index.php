@@ -19,7 +19,7 @@ use Comparator\DbComparator; ?>
         foreach ($_GET as $item) {
             $databasesCon[] = explode('%%', $item);
         }
-    } catch (\Exception $e) {
+    } catch (\Throwable $e) {
         die("" . $e->getMessage());
     }
 endif;
