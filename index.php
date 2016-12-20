@@ -1,6 +1,7 @@
 <?php
 include_once('DbComparator.php');
 
+/** @var DbComparator[] $bases */
 use Comparator\DbComparator; ?>
 <html>
 <head>
@@ -29,7 +30,17 @@ if (!empty($databasesCon)): ?>
     <?php try {
         $i = 0;
         foreach ($databasesCon as $databaseCon):
-            $bases[] = $db = new DbComparator($databaseCon[0] ?? null, $databaseCon[1] ?? null, $databaseCon[2] ?? null, $databaseCon[3] ?? null);
+            $host     = $databaseCon[0] ?? null;
+            $username = $databaseCon[1] ?? null;
+            $dbName   = $databaseCon[2] ?? null;
+            $password = $databaseCon[3] ?? null;
+            try {
+                $bases[] = $db = new DbComparator($host, $username, $dbName, $password);
+            } catch (\mysqli_sql_exception $e) {
+                echo "<font color=\"#CC5555\" size=\"4\">";
+                echo $e->getCode() == 2002 ? "Error connection to host '{$host}'" : $e->getMessage();
+                echo "</font>";
+            }
             if (!$db->hasErrors()):
                 if ($content = $db->getContent()): ?>
                     <h2 class="structure-title">

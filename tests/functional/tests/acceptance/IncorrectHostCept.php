@@ -11,5 +11,5 @@ $I->see('Please, enter params for database');
 
 $I->wantTo('Test connection with incorrect DB-host.');
 $I->expectTo('Message such as "Unknown user "Error connection to host \'some_host\'".');
-$I->amOnPage('?a=loc2host%%some_incorrect_name%%hookah');
+$I->amOnPage('?a=some_host%%root%%gurps');
 $I->see('Error connection to host \'some_host\'');

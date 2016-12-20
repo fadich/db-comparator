@@ -11,5 +11,5 @@ $I->see('Please, enter params for database');
 
 $I->wantTo('Test connection with incorrect password.');
 $I->expectTo('Message such as "access denied".');
-$I->amOnPage('?a=localhost%%root%%hookah%%qwe');
+$I->amOnPage('?a=localhost%%root%%gurps%%qwe');
 $I->see('Access denied for user \'root\'@\'localhost\' (using password: YES)');
