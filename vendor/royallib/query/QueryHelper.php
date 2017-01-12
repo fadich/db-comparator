@@ -1,0 +1,21 @@
+<?php
+
+namespace royal\query;
+
+
+/**
+ * Class QueryHelper
+ * @package app\components\HelpClasses\query
+ *
+ * @author Fadi Ahmad
+ */
+class QueryHelper extends BaseQueryHelper
+{
+    /**
+     * Class has no realisation, so defined protected constructor, that can be redefined into child classes,
+     *   but, most likely, they will return instances from static methods.
+     */
+    protected function __constructor() {  }
+
+    protected $_connection;
+}

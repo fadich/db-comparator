@@ -1,6 +1,6 @@
 <?php
 
-namespace Comparator;
+namespace comparator\core;
 
 /**
  * Class DbComparator
@@ -27,8 +27,7 @@ class DbComparator
      * @param bool $username
      * @param bool $dbName
      * @param null $password
-     *
-     * @throws \Throwable
+     * @throws \Exception
      */
     public function __construct($host = false, $username = false, $dbName = false, $password = null)
     {
@@ -40,15 +39,14 @@ class DbComparator
         try {
             $this->connection();
             $this->getTables();
-        } catch (\Throwable $e) {
+        } catch (\Exception $e) {
             $this->_errors[] = $e;
-            throw $e;
+            throw new \Exception($e->getMessage());
         }
     }
 
     /**
      * Connect to database
-     *
      * @throws \Exception
      */
     private function connection()
@@ -83,7 +81,7 @@ class DbComparator
     {
         return !empty($this->_structure) ? $this->_structure : false;
     }
-    
+
     /** @return bool */
     public function hasErrors()
     {
@@ -94,7 +92,7 @@ class DbComparator
     {
         return $this->_host . "@" . $this->_dbName;
     }
-    
+
     public function compare(DbComparator $db)
     {
         foreach ($this->_structure as $key => $table){
@@ -138,7 +136,7 @@ class DbComparator
             }
         }
     }
-    
+
     public function getErrors()
     {
         return $this->_errors;
