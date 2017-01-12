@@ -44,7 +44,7 @@ final class Application extends Object
 
     protected function getControllerClass()
     {
-        return APP_NAME . '\\controllers\\' . (new Str($this->_controller))->toClassName() . "Controller";
+        return '\\' . APP_NAME . '\\controllers\\' . (new Str($this->_controller))->toClassName() . "Controller";
     }
 
     /**

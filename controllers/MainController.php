@@ -1,7 +1,7 @@
 <?php
 
 
-namespace royal\controllers;
+namespace comparator\controllers;
 
 
 use royal\base\Object;
