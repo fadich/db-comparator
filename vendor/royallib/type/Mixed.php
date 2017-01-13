@@ -1,6 +1,7 @@
 <?php
 
 namespace royal\type;
+use royal\base\exceptions\IncorrectParamsException;
 
 /**
  * Class Mixed
@@ -15,6 +16,11 @@ namespace royal\type;
  */
 class Mixed extends BaseType
 {
+    const FORMAT_ARRAY  = 1;
+    const FORMAT_JSON   = 2;
+    const FORMAT_OBJECT = 2;
+    const FORMAT_STRING = 4;
+
     /** @var mixed $value */
     protected $_value;
 
@@ -58,7 +64,7 @@ class Mixed extends BaseType
      * @return $this
      * @throws \TypeError
      */
-    public function implodeElements($glue = "", array $keys = [], string $separator = "=", bool $convert = false)
+    public function implodeElements($glue = "&", string $separator = "=", array $keys = [], bool $convert = false)
     {
         if (!$convert && !is_array($this->_value)) {
             throw new \TypeError("Value should be type of array, but not " . gettype($this->_value));
@@ -79,6 +85,45 @@ class Mixed extends BaseType
             }
         }
         $this->_value = $string;
+        return $this;
+    }
+
+    /**
+     * TODO: doc method explodeElements()
+     *
+     *
+     * @param string $glue
+     * @param string $separator
+     * @param array  $keys
+     * @param int    $format
+     *
+     * @return $this
+     * @throws IncorrectParamsException
+     */
+    public function explodeElements(string $glue = "&", string $separator = "=", array $keys = [], int $format = self::FORMAT_ARRAY)
+    {
+        if ($format !== self::FORMAT_ARRAY && $format !== self::FORMAT_JSON && $format !== self::FORMAT_OBJECT) {
+            throw new IncorrectParamsException("Incorrect result format");
+        }
+        if (!is_string($this->value)) {
+            throw new IncorrectParamsException('Value (Mixed::$value) should be a string$ ' . gettype($this->value) . ' given');
+        }
+        $elems = explode($glue, $this->value);
+        $res   = [];
+        foreach ($elems as $elem) {
+            $item = explode($separator, $elem);
+            if (sizeof($item) > 2) {
+                throw new IncorrectParamsException("Invalid value structure: given incorrect an element size");
+            } elseif (sizeof($item) == 2) {
+                if (empty($keys) || in_array($item[0], $keys)) {
+                    $res[(string)$item[0]] = $item[1];
+                }
+            } else {
+                $res[] = $item[0];
+            }
+        }
+        $this->_value = $format === self::FORMAT_JSON ? json_encode($res) :
+            ($format === self::FORMAT_OBJECT ? (object)$res : $res);
         return $this;
     }
 

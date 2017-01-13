@@ -14,8 +14,11 @@ function hide(i) {
 function merge(from, to) {
     console.log(from, to);
 
-    var body = {from: from, to: to};
-
+    var body = {
+        from: from,
+        to: to,
+        location: window.location.search
+    };
     $.ajax({
         url: "/main/merge",
         type: "POST",

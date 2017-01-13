@@ -139,5 +139,5 @@ use comparator\core\DbComparator;
         'database' => $base->database,
         'password' => $base->password,
     ];
-    return (new Mixed($properties))->implodeElements('%%', [], '=>')->value;
+    return (new Mixed($properties))->implodeElements('%%', '=>')->value;
 }
