@@ -10,3 +10,7 @@ function hide(i) {
         elementSpan.innerHTML = '(show)';
     }
 }
+
+function merge(from, to) {
+    console.log(from, to);
+}

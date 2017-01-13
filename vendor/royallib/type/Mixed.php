@@ -8,7 +8,7 @@ namespace royal\type;
  *
  * Helper for working with any types of variables (mixed).
  *
- * @property array $value       The value (of array).
+ * @property mixed $value       The value (of array).
  * @see Mixed::getValue()
  *
  * @author Fadi Ahmad
@@ -28,7 +28,7 @@ class Mixed extends BaseType
     public function __construct($value = null)
     {
         $this->_value = $value;
-        parent::__construct();
+//        parent::__construct();
     }
 
     /**

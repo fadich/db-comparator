@@ -1,5 +1,6 @@
 <?php
 
+use \royal\type\Mixed;
 use comparator\core\DbComparator;
 
 /** @var DbComparator[] $bases */
@@ -60,7 +61,7 @@ use comparator\core\DbComparator;
                         </h2>
                     <?php endif;
                 else: ?>
-                    <font color="#CC5555"><?= implode('<br>', $db->getErrors()); ?></font>
+                    <font color="#CC5555"><?= implode('<br>', $db->errors); ?></font>
                 <?php endif;
             endforeach;
         } catch (\Exception $e) {
@@ -82,12 +83,14 @@ use comparator\core\DbComparator;
                                 <tr>
                                     <?php if (!empty($compareResult[$i])): ?>
                                         <td class="table-td">
+                                            <button onclick="merge('<?= implodeProperties($bases[$i]) ?>', '<?= implodeProperties($bases[$j]) ?>')"> >> </button><br>
                                             <font size="4"><strong>Database "<?= $bases[$i]->getDbName() ?>" has:</strong></font><br>
                                             <?php displayResult($compareResult[$i]); ?>
                                         </td>
                                     <?php endif; ?>
                                     <?php if (!empty($compareResult[$j])): ?>
                                         <td class="table-td">
+                                            <button onclick="merge('<?= implodeProperties($bases[$j]) ?>', '<?= implodeProperties($bases[$i]) ?>')"> << </button><br>
                                             <font size="4"><strong>Database "<?= $bases[$j]->getDbName() ?>" has:</strong></font><br>
                                             <?php displayResult($compareResult[$j]); ?>
                                         </td>
@@ -128,3 +131,12 @@ use comparator\core\DbComparator;
     endforeach;
 } ?>
 
+<?php function implodeProperties(DbComparator $base) {
+    $properties = [
+        'host'     => $base->host,
+        'username' => $base->username,
+        'database' => $base->database,
+        'password' => $base->password,
+    ];
+    return (new Mixed($properties))->implodeElements('%%', [], '=>')->value;
+}

@@ -2,12 +2,22 @@
 
 namespace comparator\core;
 
+
+use royal\base\Object;
+
 /**
  * Class DbComparator
  *
  * @package     Comparator
+ *
+ *
+ * @property array $errors
+ * @property string $host
+ * @property string $username
+ * @property string $database
+ * @property string $password
  */
-class DbComparator
+class DbComparator extends Object
 {
     /** $database is mysqli object
      * @var  \mysqli
@@ -140,5 +150,25 @@ class DbComparator
     public function getErrors()
     {
         return $this->_errors;
+    }
+
+    protected function getHost()
+    {
+        return $this->_host;
+    }
+
+    protected function getUsername()
+    {
+        return $this->_username;
+    }
+
+    protected function getDatabase()
+    {
+        return $this->_dbName;
+    }
+
+    protected function getPassword()
+    {
+        return $this->_password;
     }
 }
