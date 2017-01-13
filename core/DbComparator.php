@@ -206,7 +206,7 @@ class DbComparator extends Object
 
     protected function createTable($tableName, $reference)
     {
-//        $struct = $reference->_structure[$tableName];
-        echo '<pre>'; var_dump(1); die;
+        $struct = $reference->_structure[$tableName];
+        echo '<pre>'; var_dump($struct); die;
     }
 }

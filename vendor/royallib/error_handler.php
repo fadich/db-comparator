@@ -2,20 +2,23 @@
 
 set_error_handler('error_handler');
 
-function error_handler($severity, $message, $filename, $lineno) {
+function error_handler($severity, $message, $filename, $lineno, $previous ) {
     if (error_reporting() == 0) {
         return;
     }
-    if (error_reporting() & $severity) {
+    echo '<pre>';
+    if ($previous instanceof \Throwable) {
+        displayError(new ErrorException($message, 0, $severity, $filename, $lineno, $previous));
+    } else {
         displayError(new ErrorException($message, 0, $severity, $filename, $lineno));
     }
+    exit();
 }
 
-function displayError($throwable)
-{
+function displayError($throwable) {
     if ($throwable instanceof \Throwable) {
-        return "<b>" . get_class($throwable) . "</b> with message: \n" . $throwable->getMessage() . ".\n"
-            . $throwable->getFile() . ":" . $throwable->getLine() . "\n" . $this->displayError($throwable->getPrevious());
+        echo "<b>" . get_class($throwable) . "</b> with message: \n" . $throwable->getMessage() . ".\n"
+            . $throwable->getFile() . ":" . $throwable->getLine() . "\n" . displayError($throwable->getPrevious());
     }
-    return '';
+    echo '';
 }
