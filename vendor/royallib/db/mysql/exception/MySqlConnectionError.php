@@ -1,6 +1,6 @@
 <?php
 
-namespace royal\db\exception;
+namespace royal\db\mysql\exception;
 
 
 class MySqlConnectionError extends MySqlException

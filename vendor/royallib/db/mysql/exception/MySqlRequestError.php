@@ -1,7 +1,7 @@
 <?php
 
 
-namespace royal\db\exception;
+namespace royal\db\mysql\exception;
 
 
 class MySqlRequestError extends MySqlException

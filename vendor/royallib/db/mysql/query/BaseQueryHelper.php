@@ -1,6 +1,6 @@
 <?php
 
-namespace royal\db\query;
+namespace royal\db\mysql\query;
 
 
 use royal\base\Object;

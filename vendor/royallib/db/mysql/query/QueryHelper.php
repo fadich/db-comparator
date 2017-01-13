@@ -1,6 +1,6 @@
 <?php
 
-namespace royal\db\query;
+namespace royal\db\mysql\query;
 
 
 /**
@@ -16,6 +16,4 @@ class QueryHelper extends BaseQueryHelper
      *   but, most likely, they will return instances from static methods.
      */
     protected function __constructor() {  }
-
-    protected $_connection;
 }

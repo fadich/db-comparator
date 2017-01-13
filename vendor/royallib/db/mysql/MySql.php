@@ -1,9 +1,11 @@
 <?php
 
-namespace royal\db;
+namespace royal\db\mysql;
 
 
-use royal\db\exception\MySqlConnectionError;
+use royal\db\BaseConnection;
+use royal\db\mysql\exception\MySqlConnectionError;
+
 
 class MySql extends BaseConnection
 {
@@ -29,11 +31,6 @@ class MySql extends BaseConnection
         $this->close();
     }
 
-    public function close()
-    {
-        $this->_sql->close();
-    }
-
     public function connect()
     {
         if ($this->hasErrors()) {
@@ -45,5 +42,10 @@ class MySql extends BaseConnection
             $this->_errors[]   = 'Error connection to ' . $this->_username . '@' . $this->_host;
             throw new MySqlConnectionError('Error connection to ' . $this->_username . '@' . $this->_host);
         }
+    }
+
+    public function close()
+    {
+        $this->_sql->close();
     }
 }
