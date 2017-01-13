@@ -155,9 +155,25 @@ class DbComparator extends Object
     public function join(DbComparator $joining)
     {
         $diff = $this->compare($joining);
-        echo '<pre>'; var_dump($joining->database); die;
         if ($diff) {
-            foreach ($diff as $key => $value) {
+            foreach ($diff as $table => $columns) {
+                if (is_string($columns)) {
+                    // creating table
+                } elseif (is_array($columns)) {
+                    //alter table
+                    foreach ($columns as $name => $column) {
+                        if (is_string($column)) {
+                        // creating column
+                        } elseif (is_array($column)) {
+                            // alter column
+                            foreach ($column as $prop => $type) {
+                                if (is_string($type)) {
+                                    // alter type
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
         echo '<pre>'; var_dump($diff); die;
