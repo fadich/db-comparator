@@ -4,8 +4,8 @@
 namespace royal\base\controllers;
 
 
-use royal\base\Application;
 use royal\base\Object;
+use royal\base\Application;
 
 abstract class BaseController extends Object
 {
@@ -19,7 +19,7 @@ abstract class BaseController extends Object
 
     private function includeView()
     {
-        return include_once ($this->findView());
+        return include_once($this->findView());
     }
 
     private function findView()

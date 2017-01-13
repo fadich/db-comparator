@@ -4,10 +4,14 @@
 namespace royal\base;
 
 
+use royal\base\exceptions\BadRequestException;
 use royal\type\Str;
 
 final class Application extends Object
 {
+    /** @var Request $request */
+    public static $request;
+
     private static $_baseAppPath;
 
     private $_url;
@@ -18,13 +22,16 @@ final class Application extends Object
 
     public static function run()
     {
+        self::$request = new Request();
         self::$_baseAppPath = __DIR__ . '/../../../';
         $con = new static();
         $con->_url = explode("?", $_SERVER['REQUEST_URI'])[0];
-        $con->_controller = explode("/", $con->_url)[0];
-        $con->_action   = explode("/", $con->_url)[1] ?? '';
+        $con->_controller = explode("/", $con->_url)[1] ?? '';
+        $con->_action   = explode("/", $con->_url)[2] ?? '';
         try {
             $con->call();
+        } catch (BadRequestException $exception) {
+            Application::$request->redirect('', 404);
         } catch (\Throwable $throwable) {
             echo '<pre>'; die($con->displayError($throwable));
         }
@@ -41,7 +48,11 @@ final class Application extends Object
             $controller = new $this->controllerClass;
             if ($this->_action) {
                 $scenario = "a{$this->_action}";
-                return $controller->$scenario();
+                try {
+                    return $controller->$scenario();
+                } catch (\Error $error) {
+                    throw new BadRequestException("Unknown scenario {$this->_controller}/{$this->_action}");
+                }
             }
             return $controller->aIndex();
         }

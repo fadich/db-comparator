@@ -8,8 +8,8 @@ use comparator\core\DbComparator;
 <html>
 <head>
     <title>Database comparator</title>
-    <script src="../js/main.js"></script>
-    <link href="../style/main.css" rel="stylesheet">
+    <script src="/js/main.js"></script>
+    <link href="/style/main.css" rel="stylesheet">
 </head>
 <body>
 <div class="head">Database comparator</div>

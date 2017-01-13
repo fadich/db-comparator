@@ -31,9 +31,9 @@ class DbComparator
      */
     public function __construct($host = false, $username = false, $dbName = false, $password = null)
     {
-        $this->_host     = $host;
-        $this->_username = $username;
-        $this->_dbName   = $dbName;
+        $this->_host     = $host ?: 'localhost';
+        $this->_username = $username ?: 'root';
+        $this->_dbName   = $dbName ?: 'mysql';
         $this->_password = $password;
         $this->validate();
         try {
