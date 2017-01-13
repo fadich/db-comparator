@@ -4,6 +4,9 @@ namespace comparator\core;
 
 
 use royal\base\Object;
+use royal\db\mysql\exception\MySqlRequestError;
+use royal\db\mysql\MySql;
+use royal\db\mysql\query\QueryBuilder;
 
 /**
  * Class DbComparator
@@ -204,9 +207,51 @@ class DbComparator extends Object
         return $this->_password;
     }
 
-    protected function createTable($tableName, $reference)
+    protected function createTable($tableName, DbComparator $updating)
     {
-        $struct = $reference->_structure[$tableName];
-        echo '<pre>'; var_dump($struct); die;
+        $table   = $this->_structure[$tableName];
+        $columns = $this->columnStructure($table);
+        $keys    = $this->getTableKeys($table);
+        $params  = "";
+        $request = "CREATE TABLE IF NOT EXISTS `{$tableName}` ( {$columns} " . ($keys ? ", {$keys}" : " ") . ") {$params} ";
+        $sql     = new MySql($updating->host, $updating->username, $updating->database, $updating->password);
+        $query   = new QueryBuilder($sql);
+        echo '<pre>';
+        echo '<pre>'; var_dump($request); die;
+        if (!$query->connection->query($request)) {
+            throw new MySqlRequestError($query->connection->error);
+        } else {
+            var_export("success");
+        }
+        die;
+        return true;
+    }
+
+    protected function columnStructure(array $table)
+    {
+        $res = "";
+        $i   = sizeof($table);
+        foreach ($table as $column => $properties) {
+            $res .= "`{$column}` " . $properties['Type'];
+            $res .= $properties['Null'] === "NO" ? " NOT NULL " : " ";
+            $res .= "DEFAULT " . ($properties['Default'] ? var_export($properties['Default']) : "NULL ") . (--$i ? ", " : " ");
+            // TODO: !!! EXTRA !!!
+        }
+        return $res;
+    }
+
+    protected function getTableKeys(array $table)
+    {
+        $keys = [];
+        foreach ($table as $column => $properties) {
+            foreach ($properties as $name => $property) {
+                if ($name == "Key") {
+                    if ($property == "PRI") {
+                        $keys[] = " PRIMARY KEY (`{$column}`)";
+                    }
+                }
+            }
+        }
+        return implode(", ", $keys);
     }
 }
