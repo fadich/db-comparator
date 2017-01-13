@@ -49,9 +49,9 @@ class DbComparator extends Object
         try {
             $this->connection();
             $this->getTables();
-        } catch (\Exception $e) {
+        } catch (\mysqli_sql_exception $e) {
             $this->_errors[] = $e;
-            throw new \Exception($e->getMessage());
+            throw $e;
         }
     }
 
@@ -65,7 +65,12 @@ class DbComparator extends Object
             throw new \Exception('Error connection to ' . $this->_username . '@' . $this->_host);
         }
         mysqli_report(MYSQLI_REPORT_STRICT);
-        $this->_database = new \mysqli($this->_host, $this->_username, $this->_password, $this->_dbName);
+        try {
+            $this->_database = new \mysqli($this->_host, $this->_username, $this->_password, $this->_dbName);
+        } catch (\mysqli_sql_exception $e) {
+            $this->_errors[]   = 'Error connection to ' . $this->_username . '@' . $this->_host;
+            throw new \Exception('Error connection to ' . $this->_username . '@' . $this->_host);
+        }
         if ($this->_database->connect_error) {
             $this->_errors[]   = 'Error connection to ' . $this->_username . '@' . $this->_host;
             throw new \Exception('Error connection to ' . $this->_username . '@' . $this->_host);

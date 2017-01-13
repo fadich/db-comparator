@@ -22,6 +22,7 @@ final class Application extends Object
 
     public static function run()
     {
+        ini_set('display_errors', 0);
         self::$request = new Request();
         self::$_baseAppPath = __DIR__ . '/../../../';
         $con = new static();
@@ -48,11 +49,10 @@ final class Application extends Object
             $controller = new $this->controllerClass;
             if ($this->_action) {
                 $scenario = "a{$this->_action}";
-                try {
-                    return $controller->$scenario();
-                } catch (\Error $error) {
+                if (!method_exists($controller, $scenario)) {
                     throw new BadRequestException("Unknown scenario {$this->_controller}/{$this->_action}");
                 }
+                return $controller->$scenario();
             }
             return $controller->aIndex();
         }

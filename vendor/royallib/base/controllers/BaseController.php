@@ -17,6 +17,11 @@ abstract class BaseController extends Object
         return $this->includeView();
     }
 
+    public function redirect($url, $code = 302)
+    {
+        Application::$request->redirect($url, $code);
+    }
+
     private function includeView()
     {
         return include_once($this->findView());
@@ -26,5 +31,4 @@ abstract class BaseController extends Object
     {
         return Application::basePath() . "/view/{$this->_view}.php";
     }
-
 }

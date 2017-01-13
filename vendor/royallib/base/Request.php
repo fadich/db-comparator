@@ -14,6 +14,7 @@ class Request extends Object
     public function redirect($url, $code = 302)
     {
         header("Location: {$url} ", true, $code); // HTTP/{$this->version}
+        exit();
     }
 
     protected function getVersion()

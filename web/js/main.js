@@ -17,7 +17,7 @@ function merge(from, to) {
     var body = {
         from: from,
         to: to,
-        location: window.location.search
+        params: window.location.search
     };
     $.ajax({
         url: "/main/merge",

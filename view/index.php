@@ -82,20 +82,24 @@ use comparator\core\DbComparator;
                             $compareResult[$j] = $bases[$j]->compare($bases[$i]); ?>
                             <table>
                                 <tr>
-                                    <?php if (!empty($compareResult[$i])): ?>
-                                        <td class="table-td">
+                                    <td class="table-td">
+                                        <?php if (!empty($compareResult[$i])): ?>
                                             <button onclick="merge('<?= implodeProperties($bases[$i]) ?>', '<?= implodeProperties($bases[$j]) ?>')"> >> </button><br>
                                             <font size="4"><strong>Database "<?= $bases[$i]->getDbName() ?>" has:</strong></font><br>
                                             <?php displayResult($compareResult[$i]); ?>
-                                        </td>
-                                    <?php endif; ?>
-                                    <?php if (!empty($compareResult[$j])): ?>
-                                        <td class="table-td">
+                                        <?php else: ?>
+                                            <h3>(empty)</h3>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="table-td">
+                                        <?php if (!empty($compareResult[$j])): ?>
                                             <button onclick="merge('<?= implodeProperties($bases[$j]) ?>', '<?= implodeProperties($bases[$i]) ?>')"> << </button><br>
                                             <font size="4"><strong>Database "<?= $bases[$j]->getDbName() ?>" has:</strong></font><br>
                                             <?php displayResult($compareResult[$j]); ?>
-                                        </td>
-                                    <?php endif; ?>
+                                         <?php else: ?>
+                                            <h3>(empty)</h3>
+                                        <?php endif; ?>
+                                    </td>
                                 </tr>
                             </table>
                             <?php if (empty($compareResult[$i]) && empty($compareResult[$j])): ?>

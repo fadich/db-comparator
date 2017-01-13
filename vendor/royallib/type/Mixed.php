@@ -18,7 +18,7 @@ class Mixed extends BaseType
 {
     const FORMAT_ARRAY  = 1;
     const FORMAT_JSON   = 2;
-    const FORMAT_OBJECT = 2;
+    const FORMAT_OBJECT = 3;
     const FORMAT_STRING = 4;
 
     /** @var mixed $value */
