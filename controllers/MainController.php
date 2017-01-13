@@ -4,9 +4,11 @@
 namespace comparator\controllers;
 
 
+use royal\type\Mixed;
+use royal\db\mysql\MySql;
 use comparator\core\DbComparator;
 use royal\base\controllers\Controller;
-use royal\type\Mixed;
+use royal\db\mysql\query\QueryBuilder;
 
 class MainController extends Controller
 {
@@ -29,5 +31,12 @@ class MainController extends Controller
             $this->redirect('main/join', 400);
         }
         echo '<pre>'; var_dump($from->join($to)); die;
+    }
+
+    public function aTest()
+    {
+        $sql = new MySql('localhost', 'root', 'empty');
+        $query = new QueryBuilder($sql);
+        echo '<pre>'; var_dump($query->select('*')->from('test')->fetchMap('column_2', 'column_3')); die;
     }
 }

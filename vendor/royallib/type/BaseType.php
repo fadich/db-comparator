@@ -8,7 +8,7 @@ use royal\base\Object;
 
 /**
  * Class BaseType
- * @package app\components\HelpClasses\type
+ * @package royal\type
  *          
  * Helper classes for working with variables types.
  *

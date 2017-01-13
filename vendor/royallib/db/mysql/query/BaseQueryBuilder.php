@@ -6,6 +6,7 @@ namespace royal\db\mysql\query;
 
 use royal\base\Interact;
 use royal\db\mysql\MySql;
+use royal\type\Matrix;
 
 /**
  * Class BaseQueryBuilder
@@ -16,8 +17,11 @@ use royal\db\mysql\MySql;
 abstract class BaseQueryBuilder extends Interact
 {
     protected $_table;
-    protected $_selecting;
-    protected $_join;
+    protected $_columns;
+    protected $_where;
+    protected $_order;
+    protected $_limit;
+    protected $_join = [];
 
     /** @var MySql $_connection */
     protected $_connection;
@@ -37,12 +41,14 @@ abstract class BaseQueryBuilder extends Interact
 
     public function select($columns)
     {
-        $this->_selecting = QueryHelper::columns($columns);
+        $this->_columns = QueryHelper::columns($columns);
+        return $this;
     }
 
-    public function from(string $from, string $alias = '')
+    public function from(string $from)
     {
-        $this->_table = "`{$this->_connection->database}`.`{$from}`" . ($alias ? "`{$alias}` " : " ");
+        $this->_table = "{$from}";
+        return $this;
     }
 
     /**
@@ -78,6 +84,24 @@ abstract class BaseQueryBuilder extends Interact
         return $this;
     }
 
+    public function where($conditions)
+    {
+        $this->_where = QueryHelper::where($conditions);
+        return $this;
+    }
+
+    public function orderBy($order)
+    {
+        $this->_order = QueryHelper::order($order);
+        return $this;
+    }
+
+    public function limit($limit)
+    {
+        $this->_limit = QueryHelper::limit($limit);
+        return $this;
+    }
+
     /**
      * Counting the number of pages of the table.
      * For example:
@@ -94,5 +118,60 @@ abstract class BaseQueryBuilder extends Interact
         $joins  = QueryHelper::joins($this->_join);
         $number = (int)$this->_connection->createCommand("SELECT FLOOR(COUNT(*) / {$pageSize}) AS `pages` FROM {$this->_name} {$joins} {$where}")->queryScalar();
         return $number ? $number : 1;
+    }
+
+    public function fetchAll()
+    {
+        $fetch = $this->fetch();
+        return !$fetch ? $fetch : $fetch->fetch_all(MYSQLI_ASSOC);
+    }
+
+    public function fetchRow()
+    {
+        $fetch = $this->fetch();
+        return !$fetch ? $fetch : $fetch->fetch_assoc();
+    }
+
+    public function fetchColumn($column)
+    {
+        $fetch = $this->fetchAll();
+        return $fetch ? array_column($fetch, $column) : false;
+    }
+
+    public function fetchMap($from, $to)
+    {
+        $fetch = $this->fetchAll();
+        return $fetch ? (new Matrix($fetch))->map($from, $to)->value : false;
+    }
+
+    public function fetchSingle()
+    {
+        $fetch = (!$fetch = $this->fetch()) ? $fetch : $fetch->fetch_row();
+        return $fetch ? $fetch[0] : false;
+    }
+
+    public function fetchFields()
+    {
+        $fetch = $this->fetch();
+        return !$fetch ? $fetch : $fetch->fetch_fields();
+    }
+
+    /**
+     * @return \mysqli_result|boolean
+     */
+    protected function fetch()
+    {
+        return $this->connection->query($this->build());
+    }
+
+    protected function build()
+    {
+        return "SELECT 
+                  {$this->_columns} 
+                FROM {$this->_table}" .
+                QueryHelper::joins($this->_join) . "
+                {$this->_where}
+                {$this->_order}
+                {$this->_limit}";
     }
 }

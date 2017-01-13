@@ -4,7 +4,7 @@ namespace royal\type;
 
 /**
  * Class Scalar
- * @package app\components\HelpClasses\type
+ * @package royal\type
  *          
  * Helps working with a scalar-type variables.
  *

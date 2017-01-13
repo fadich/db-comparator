@@ -5,7 +5,7 @@ namespace royal\db\mysql\query;
 
 /**
  * Class QueryHelper
- * @package app\components\HelpClasses\query
+ * @package royal\db\mysql\query
  *
  * @author Fadi Ahmad
  */

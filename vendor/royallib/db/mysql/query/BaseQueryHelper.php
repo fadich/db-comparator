@@ -7,7 +7,7 @@ use royal\base\Object;
 
 /**
  * Class BaseQueryHelper
- * @package app\components\HelpClasses\query
+ * @package royal\db\mysql\query
  *
  * Providing tools for building SQL-queries.
  *
@@ -70,39 +70,49 @@ abstract class BaseQueryHelper extends Object
     }
 
     /**
-     * Creating ORDER BY string from array.
+     * Creating ORDER BY string from an array or from a string.
      * For example:
-     *      $order array can be set as ['column_1' => 'ASC', 'column_2' => 'DESC']. In this case, there will be
-     *      ordering in selecting query such as "ORDER BY column_1 ASC, column_2 DESC".
+     *      a) $order array can be set as ['column_1' => 'ASC', 'column_2' => 'DESC']; in this case, there will be
+     *            ordering in selecting query such as "ORDER BY column_1 ASC, column_2 DESC";
+     *      b) $order string is "column_1 ASC, column_2 DESC" in this case, there will be
+     *            ordering in selecting query such as "ORDER BY column_1 ASC, column_2 DESC";
      *
-     * @param array $array
+     * @param array|string $orders
      *
      * @return string
      */
-    public static function order(array $array) : string
+    public static function order($orders) : string
     {
-        return self::arrayToParams($array, 'ORDER BY', ', ', ' ');
+        if (is_string($orders)) {
+            return "ORDER BY {$orders}";
+        }
+        return self::arrayToParams($orders, 'ORDER BY', ', ', ' ');
     }
 
     /**
-     * Creating LIMIT-param string from array.
+     * Creating LIMIT-param string from an array or from a string.
      * For example:
-     *      $limit array can be set as [0,30]; in this case, there will be limit param in selecting query
-     *          such as "LIMIT 0,30";
-     *      if $limit array set as [30], in this case, there will be interpreted as "LIMIT 30".
+     *      a) $limit array can be set as [0,30]; in this case, there will be limit param in selecting query
+     *            such as "LIMIT 0,30";
+     *      b) if $limit array set as [30], in this case, there will be interpreted as "LIMIT 30";
+     *      c) whenever $limit is a string such as "30, 50", there will be created string species "LIMIT 30, 50".
+     *
      *
      * Limit array max size is 2.
      *
-     * @param array $array
+     * @param array|string $limit
      *
      * @return string
      */
-    public static function limit(array $array) : string
+    public static function limit($limit) : string
     {
-        if (sizeof($array) > 2) {
+        if (is_string($limit)) {
+            return "LIMIT {$limit}";
+        }
+        if (sizeof($limit) > 2) {
             throw new \InvalidArgumentException("Limit array may contain no more, than 2 elements");
         }
-        return !empty($array) ? "LIMIT " . implode(",", $array) : " ";
+        return !empty($limit) ? "LIMIT " . implode(",", $limit) : " ";
     }
 
     /**

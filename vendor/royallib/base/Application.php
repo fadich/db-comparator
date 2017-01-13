@@ -22,7 +22,7 @@ final class Application extends Object
 
     public static function run()
     {
-        ini_set('display_errors', 0);
+        ini_set('display_errors', 1);
         self::$request = new Request();
         self::$_baseAppPath = __DIR__ . '/../../../';
         $con = new static();
@@ -46,7 +46,11 @@ final class Application extends Object
     private function call()
     {
         if ($this->_controller) {
-            $controller = new $this->controllerClass;
+            try {
+                $controller = new $this->controllerClass;
+            } catch (\Error $error) {
+                throw new BadRequestException("Unknown controller {$this->_controller}");
+            }
             if ($this->_action) {
                 $scenario = "a{$this->_action}";
                 if (!method_exists($controller, $scenario)) {
@@ -73,7 +77,7 @@ final class Application extends Object
     private function displayError($throwable)
     {
         if ($throwable instanceof \Throwable) {
-            return "<b>" . get_class($throwable) . "</b>: " . $throwable->getMessage() . ". "
+            return "<b>" . get_class($throwable) . "</b> with message: \n" . $throwable->getMessage() . ".\n"
                 . $throwable->getFile() . ":" . $throwable->getLine() . "\n" . $this->displayError($throwable->getPrevious());
         }
         return '';

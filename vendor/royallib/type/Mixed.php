@@ -1,11 +1,12 @@
 <?php
 
 namespace royal\type;
+
 use royal\base\exceptions\IncorrectParamsException;
 
 /**
  * Class Mixed
- * @package app\components\HelpClasses\type
+ * @package royal\type
  *
  * Helper for working with any types of variables (mixed).
  *
