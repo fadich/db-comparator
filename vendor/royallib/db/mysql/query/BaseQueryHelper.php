@@ -106,6 +106,14 @@ abstract class BaseQueryHelper extends Object
     }
 
     /**
+     * A query part of selecting columns.
+     * In case of $columns is a string - it is simply passed to the query, for example:
+     *
+     * ```php
+     * echo BaseQueryHelper::columns("`column_1`, `columns_2`");
+     * // The result string will be: "`column_1`, `columns_2`"
+     * ```
+     *
      * Whenever selecting columns array is empty, then selecting all (return "*"),
      *      else, array elements (that are strings names of necessary columns) separated by a comma.
      * In case of the is string a key of the array element, this means that value will an selecting column alias.
@@ -124,12 +132,15 @@ abstract class BaseQueryHelper extends Object
      *
      * ```
      *
-     * @param array $array
+     * @param array|string $columns
      *
      * @return string
      */
-    public static function columns(array $array) : string
+    public static function columns($columns) : string
     {
+        if (is_string($columns)) {
+            return $columns;
+        }
         if (empty($array)) {
             return " * ";
         }
@@ -141,6 +152,41 @@ abstract class BaseQueryHelper extends Object
             $columns .= " {$item}" . (--$len ? ", " : " ");
         }
         return $columns;
+    }
+
+    /**
+     * Creating joins (sting, for query) with tables from $this->_join property.
+     *
+     * For example:
+     *
+     * ```php
+     *  // property is array such as
+     *  $this->_join =  [
+     *                      'type'       => 'inner',
+     *                      'table'      => 'table_2',
+     *                      'conditions' => [
+     *                          'table_1.col_1' => 'table_2.col_1',
+     *                      ],
+     *                  ]
+     *
+     *  // will be interpreted to string like:
+     *
+     *  echo $this->joins();
+     *
+     *  // output: "INNER JOIN table_2 ON table_1.col_1 = table_2.col_1";
+     * ```
+     *
+     * @param array $joins array kile ['type' => $joinType, 'table' => $joinTableName, 'conditions' => [$cul_1 => $cil_2]]
+     *
+     * @return string
+     */
+    public static function joins(array $joins) : string
+    {
+        $res = " ";
+        foreach ($joins as $join) {
+            $res .= strtoupper($join['type']) . " JOIN {$join['table']} " . self::on($join['conditions']) . "\n";
+        }
+        return $res;
     }
 
     /**
@@ -170,40 +216,5 @@ abstract class BaseQueryHelper extends Object
             }
         }
         return $params;
-    }
-
-    /**
-     * Creating joins (sting, for query) with tables from $this->_join property.
-     * 
-     * For example:
-     * 
-     * ```php
-     *  // property is array such as
-     *  $this->_join =  [
-     *                      'type'       => 'inner',
-     *                      'table'      => 'table_2',
-     *                      'conditions' => [
-     *                          'table_1.col_1' => 'table_2.col_1',
-     *                      ],
-     *                  ]
-     *
-     *  // will be interpreted to string like:
-     *
-     *  echo $this->joins();
-     *
-     *  // output: "INNER JOIN table_2 ON table_1.col_1 = table_2.col_1";
-     * ```
-     * 
-     * @param array $joins array kile ['type' => $joinType, 'table' => $joinTableName, 'conditions' => [$cul_1 => $cil_2]]
-     * 
-     * @return string
-     */
-    protected static function joins(array $joins) : string
-    {
-        $res = " ";
-        foreach ($joins as $join) {
-            $res .= strtoupper($join['type']) . " JOIN {$join['table']} " . self::on($join['conditions']) . "\n";
-        }
-        return $res;
     }
 }

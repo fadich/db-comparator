@@ -6,7 +6,12 @@ namespace royal\db\mysql;
 use royal\db\BaseConnection;
 use royal\db\mysql\exception\MySqlConnectionError;
 
-
+/**
+ * Class MySql
+ * @package royal\db\mysql
+ *
+ * @property \mysqli $connector
+ */
 class MySql extends BaseConnection
 {
     /** @var \mysqli $_sql */
@@ -42,10 +47,20 @@ class MySql extends BaseConnection
             $this->_errors[]   = 'Error connection to ' . $this->_username . '@' . $this->_host;
             throw new MySqlConnectionError('Error connection to ' . $this->_username . '@' . $this->_host);
         }
+        return $this;
     }
 
     public function close()
     {
         $this->_sql->close();
+    }
+
+    /**
+     * @return \mysqli
+     * @see MySql::$connector
+     */
+    protected function getConnector()
+    {
+        return $this->_sql;
     }
 }
