@@ -1,9 +1,10 @@
 <?php
-include_once('DbComparator.php');
+
+use comparator\core\DbComparator;
 
 /** @var DbComparator[] $bases */
 
-use Comparator\DbComparator; ?>
+?>
 <html>
 <head>
     <title>Database comparator</title>

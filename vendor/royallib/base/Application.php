@@ -4,23 +4,25 @@
 namespace royal\base;
 
 
-
 use royal\type\Str;
 
 final class Application extends Object
 {
+    private static $_baseAppPath;
+
     private $_url;
     private $_controller;
-    private $_scenario;
+    private $_action;
 
     private function __construct() {  }
 
     public static function run()
     {
+        self::$_baseAppPath = __DIR__ . '/../../../';
         $con = new static();
         $con->_url = explode("?", $_SERVER['REQUEST_URI'])[0];
         $con->_controller = explode("/", $con->_url)[0];
-        $con->_scenario   = explode("/", $con->_url)[1] ?? '';
+        $con->_action   = explode("/", $con->_url)[1] ?? '';
         try {
             $con->call();
         } catch (\Throwable $throwable) {
@@ -28,18 +30,23 @@ final class Application extends Object
         }
     }
 
+    public static function basePath()
+    {
+        return self::$_baseAppPath;
+    }
+
     private function call()
     {
         if ($this->_controller) {
             $controller = new $this->controllerClass;
-            if ($this->_scenario) {
-                $scenario = "s{$this->_scenario}";
+            if ($this->_action) {
+                $scenario = "a{$this->_action}";
                 return $controller->$scenario();
             }
-            return $controller->sIndex();
+            return $controller->aIndex();
         }
         $this->_controller = 'main';
-        return (new $this->controllerClass)->sIndex();
+        return (new $this->controllerClass)->aIndex();
     }
 
     protected function getControllerClass()

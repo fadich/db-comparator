@@ -4,12 +4,12 @@
 namespace comparator\controllers;
 
 
-use royal\base\Object;
+use royal\base\controllers\Controller;
 
-class MainController extends Object
+class MainController extends Controller
 {
-    public function sIndex()
+    public function aIndex()
     {
-        die("Hello!");
+        return $this->render('index');
     }
 }
