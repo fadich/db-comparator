@@ -6,6 +6,17 @@ namespace royal\db;
 
 use royal\base\Interact;
 
+/**
+ * Class BaseConnection
+ * @package royal\db
+ *
+ * @property string $host
+ * @property string $username
+ * @property string $database
+ * @property string $password
+ *
+ * @author Fadi Ahmad
+ */
 abstract class BaseConnection extends Interact
 {
     protected $_host;
@@ -15,11 +26,9 @@ abstract class BaseConnection extends Interact
 
     abstract function __construct($host = null, $username = null, $dbName = null, $password = null);
 
-    abstract public function getContents();
+    abstract public function connect();
 
-    abstract protected function connect();
-
-    abstract protected function close();
+    abstract public function close();
 
     protected function getHost()
     {

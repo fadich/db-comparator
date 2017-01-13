@@ -29,11 +29,6 @@ class MySql extends BaseConnection
         $this->close();
     }
 
-    public function getContents()
-    {
-        // TODO: Implement getContents() method.
-    }
-
     public function close()
     {
         $this->_sql->close();
