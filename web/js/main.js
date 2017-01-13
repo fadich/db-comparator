@@ -11,7 +11,7 @@ function hide(i) {
     }
 }
 
-function merge(from, to) {
+function join(from, to) {
     console.log(from, to);
 
     var body = {
@@ -20,14 +20,14 @@ function merge(from, to) {
         params: window.location.search
     };
     $.ajax({
-        url: "/main/merge",
+        url: "/main/join",
         type: "POST",
         data: body,
-        error: mergeRequestErrors(),
+        error: joinRequestErrors(),
         dataType: "json"
     });
 }
 
-function mergeRequestErrors() {
+function joinRequestErrors() {
 
 }

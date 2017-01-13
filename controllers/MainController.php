@@ -15,10 +15,13 @@ class MainController extends Controller
         return $this->render('index');
     }
 
-    public function aMerge()
+    public function aJoin()
     {
-        $from = (new Mixed($_POST['from'] ?? ''))->explodeElements('%%', '=>', [], Mixed::FORMAT_OBJECT)->value;
-        $to   = (new Mixed($_POST['to']   ?? ''))->explodeElements('%%', '=>')->value;
+        if (!isset($_POST['from']) || !isset($_POST['to']) || !$this->request->isAjax) {
+            $this->redirect('/' . (isset($_POST['params']) ? '?' . $_POST['params'] : ''));
+        }
+        $from = (new Mixed($_POST['from']))->explodeElements('%%', '=>', [], Mixed::FORMAT_OBJECT)->value;
+        $to   = (new Mixed($_POST['to']))->explodeElements('%%', '=>')->value;
         try {
             $from = new DbComparator(
                 $from->host ?? null,
@@ -27,14 +30,14 @@ class MainController extends Controller
                 $from->password ?? null
             );
             $to = new DbComparator(
-                789, //$to->host ?? null,
+                $to->host ?? null,
                 $to->username ?? null,
                 $to->database ?? null,
                 $to->password ?? null
             );
         } catch (\Exception $e) {
-            $this->redirect('/' . (isset($_POST['params']) ? '?' . $_POST['params'] : ''));
+            $this->redirect('main/join', 400);
         }
-        echo '<pre>'; var_dump($from->getContent()); die;
+        echo '<pre>'; var_dump($from->join($to)); die;
     }
 }

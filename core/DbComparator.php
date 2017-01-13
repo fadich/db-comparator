@@ -41,9 +41,9 @@ class DbComparator extends Object
      */
     public function __construct($host = false, $username = false, $dbName = false, $password = null)
     {
-        $this->_host     = $host ?: 'localhost';
-        $this->_username = $username ?: 'root';
-        $this->_dbName   = $dbName ?: 'mysql';
+        $this->_host     = $host; // ?: 'localhost';
+        $this->_username = $username;// ?: 'root';
+        $this->_dbName   = $dbName;// ?: 'mysql';
         $this->_password = $password;
         $this->validate();
         try {
@@ -152,7 +152,18 @@ class DbComparator extends Object
         }
     }
 
-    public function getErrors()
+    public function join(DbComparator $joining)
+    {
+        $diff = $this->compare($joining);
+        echo '<pre>'; var_dump($joining->database); die;
+        if ($diff) {
+            foreach ($diff as $key => $value) {
+            }
+        }
+        echo '<pre>'; var_dump($diff); die;
+    }
+
+    protected function getErrors()
     {
         return $this->_errors;
     }

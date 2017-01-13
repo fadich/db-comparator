@@ -7,9 +7,13 @@ namespace royal\base;
  * @package royal\base
  *
  * @property string $version
+ * @property string $isAjax
  */
 class Request extends Object
 {
+    protected $server;
+
+    public function __construct() {  }
 
     public function redirect($url, $code = 302)
     {
@@ -26,4 +30,8 @@ class Request extends Object
         }
     }
 
+    protected function getIsAjax()
+    {
+        return isset($_SERVER["HTTP_X_REQUESTED_WITH"]) && $_SERVER["HTTP_X_REQUESTED_WITH"] == "XMLHttpRequest";
+    }
 }

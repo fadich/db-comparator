@@ -6,10 +6,25 @@ namespace royal\base\controllers;
 
 use royal\base\Object;
 use royal\base\Application;
+use royal\base\Request;
 
+/**
+ * Class BaseController
+ * @package royal\base\controllers
+ *
+ *
+ * @property Request $request
+ */
 abstract class BaseController extends Object
 {
     protected $_view = 'index';
+    /** @var Request $_request */
+    private $_request;
+
+    public function __construct()
+    {
+        $this->_request = Application::$request;
+    }
 
     public function render($view)
     {
@@ -20,6 +35,11 @@ abstract class BaseController extends Object
     public function redirect($url, $code = 302)
     {
         Application::$request->redirect($url, $code);
+    }
+
+    protected function getRequest()
+    {
+        return $this->_request;
     }
 
     private function includeView()
