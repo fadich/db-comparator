@@ -158,7 +158,7 @@ class DbComparator extends Object
         if ($diff) {
             foreach ($diff as $table => $columns) {
                 if (is_string($columns)) {
-                    // creating table
+                    $this->createTable($columns, $joining);
                 } elseif (is_array($columns)) {
                     //alter table
                     foreach ($columns as $name => $column) {
@@ -202,5 +202,11 @@ class DbComparator extends Object
     protected function getPassword()
     {
         return $this->_password;
+    }
+
+    protected function createTable($tableName, $reference)
+    {
+//        $struct = $reference->_structure[$tableName];
+        echo '<pre>'; var_dump(1); die;
     }
 }

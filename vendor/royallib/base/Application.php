@@ -22,7 +22,7 @@ final class Application extends Object
 
     public static function run()
     {
-        ini_set('display_errors', 1);
+//        ini_set('display_errors', 1);
         self::$request = new Request();
         self::$_baseAppPath = __DIR__ . '/../../../';
         $con = new static();
@@ -34,7 +34,7 @@ final class Application extends Object
         } catch (BadRequestException $exception) {
             Application::$request->redirect('', 404);
         } catch (\Throwable $throwable) {
-            echo '<pre>'; die($con->displayError($throwable));
+            throw $throwable;
         }
     }
 
@@ -67,19 +67,5 @@ final class Application extends Object
     protected function getControllerClass()
     {
         return '\\' . APP_NAME . '\\controllers\\' . (new Str($this->_controller))->toClassName() . "Controller";
-    }
-
-    /**
-     * @param null|\Throwable $throwable
-     *
-     * @return string
-     */
-    private function displayError($throwable)
-    {
-        if ($throwable instanceof \Throwable) {
-            return "<b>" . get_class($throwable) . "</b> with message: \n" . $throwable->getMessage() . ".\n"
-                . $throwable->getFile() . ":" . $throwable->getLine() . "\n" . $this->displayError($throwable->getPrevious());
-        }
-        return '';
     }
 }
