@@ -16,7 +16,7 @@ class MainController extends Controller
 
     public function aMerge()
     {
-        echo '<pre>'; var_dump($_GET); die;
+        echo '<pre>'; var_dump($_POST); die;
         $db = new DbComparator();
         echo '<pre>'; var_dump($db->getContent()); die;
     }

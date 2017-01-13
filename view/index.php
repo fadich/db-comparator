@@ -10,6 +10,7 @@ use comparator\core\DbComparator;
 <head>
     <title>Database comparator</title>
     <script src="/js/main.js"></script>
+    <script src="/js/jquery-3.1.1.min.js"></script>
     <link href="/style/main.css" rel="stylesheet">
 </head>
 <body>

@@ -13,4 +13,18 @@ function hide(i) {
 
 function merge(from, to) {
     console.log(from, to);
+
+    var body = {from: from, to: to};
+
+    $.ajax({
+        url: "/main/merge",
+        type: "POST",
+        data: body,
+        error: mergeRequestErrors(),
+        dataType: "json"
+    });
+}
+
+function mergeRequestErrors() {
+
 }
