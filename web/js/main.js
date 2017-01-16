@@ -12,7 +12,7 @@ function hide(i) {
 }
 
 function join(from, to) {
-    console.log(from, to);
+    // console.log(from, to);
 
     var data = {
         from: from,
@@ -24,14 +24,13 @@ function join(from, to) {
         type: "POST",
         data: data,
         success: function () {
-            alert('123');
             location.reload();
         },
         error: function() {
-            alert('123');
             joinRequestErrors();
         },
-        dataType: "json"
+        complete: function () {
+        }
     });
 }
 

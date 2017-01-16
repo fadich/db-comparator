@@ -17,7 +17,10 @@ class Request extends Object
 
     public function redirect($url, $code = 302)
     {
-        header("Refresh: 0; url={$url} ", true, $code); // HTTP/{$this->version}
+        echo $code;
+        header("HTTP/{$this->version}", true, $code);
+        header("Content-Type:application/json", true, $code);
+        header("Refresh: 0; url={$url}", true, $code);
         exit();
     }
 
