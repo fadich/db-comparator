@@ -283,6 +283,6 @@ class DbComparator extends Object
 
     protected function getIsEmpty()
     {
-        return empty($this->_structure);
+        return (bool)$this->getContent();
     }
 }

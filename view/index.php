@@ -91,10 +91,10 @@ use comparator\core\DbComparator;
                                                     )"> >> </button><br>
                                             <font size="4"><strong>Database "<?= $bases[$i]->getDbName() ?>" has:</strong></font><br>
                                             <?php displayResult($compareResult[$i]); ?>
-                                        <?php else: ?>
-                                            <?php if ($bases[$j]->isEmpty): ?>
-                                                <h3>(empty)</h3>
-                                            <?php endif; ?>
+<!--                                        --><?php //else: ?>
+<!--                                            --><?php //if ($bases[$j]->isEmpty): ?>
+<!--                                                <h3>(empty)</h3>-->
+<!--                                            --><?php //endif; ?>
                                         <?php endif; ?>
                                     </td>
                                     <td class="table-td">
@@ -106,10 +106,10 @@ use comparator\core\DbComparator;
                                              )"> << </button><br>
                                             <font size="4"><strong>Database "<?= $bases[$j]->getDbName() ?>" has:</strong></font><br>
                                             <?php displayResult($compareResult[$j]); ?>
-                                         <?php else: ?>
-                                            <?php if ($bases[$j]->isEmpty): ?>
-                                                <h3>(empty)</h3>
-                                            <?php endif; ?>
+<!--                                         --><?php //else: ?>
+<!--                                            --><?php //if ($bases[$j]->isEmpty): ?>
+<!--                                                <h3>(empty)</h3>-->
+<!--                                            --><?php //endif; ?>
                                         <?php endif; ?>
                                     </td>
                                 </tr>
