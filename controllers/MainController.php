@@ -26,8 +26,8 @@ class MainController extends Controller
             $from = new DbComparator($from->host, $from->username, $from->database, $from->password);
             $to   = new DbComparator($to->host,   $to->username,   $to->database,   $to->password);
         } catch (\Exception $e) {
-            $this->redirect('main/join', 400);
+            $this->redirect('/main/join', 400);
         }
-        echo '<pre>'; var_dump($from->join($to)); die;
+        $this->redirect('/' . (isset($_POST['params']) ? $_POST['params'] : ''), $from->join($to) ? 200 : 400);
     }
 }

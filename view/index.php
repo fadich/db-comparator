@@ -84,20 +84,32 @@ use comparator\core\DbComparator;
                                 <tr>
                                     <td class="table-td">
                                         <?php if (!empty($compareResult[$i])): ?>
-                                            <button onclick="join('<?= implodeProperties($bases[$i]) ?>', '<?= implodeProperties($bases[$j]) ?>')"> >> </button><br>
+                                            <button id="join_<?= $i ?>_<?= $j ?>" onclick="join(
+                                                        '<?= implodeProperties($bases[$i]) ?>',
+                                                        '<?= implodeProperties($bases[$j]) ?>',
+                                                        'join_<?= $i ?>_<?= $j ?>'
+                                                    )"> >> </button><br>
                                             <font size="4"><strong>Database "<?= $bases[$i]->getDbName() ?>" has:</strong></font><br>
                                             <?php displayResult($compareResult[$i]); ?>
-                                        <?php else: ?>
-                                            <h3>(empty)</h3>
+<!--                                        --><?php //else: ?>
+<!--                                            --><?php //if ($bases[$j]->isEmpty): ?>
+<!--                                                <h3>(empty)</h3>-->
+<!--                                            --><?php //endif; ?>
                                         <?php endif; ?>
                                     </td>
                                     <td class="table-td">
                                         <?php if (!empty($compareResult[$j])): ?>
-                                            <button onclick="join('<?= implodeProperties($bases[$j]) ?>', '<?= implodeProperties($bases[$i]) ?>')"> << </button><br>
+                                            <button id="join_<?= $j ?>_<?= $i ?>" onclick="join(
+                                                '<?= implodeProperties($bases[$j]) ?>',
+                                                '<?= implodeProperties($bases[$i]) ?>',
+                                                'join_<?= $j ?>_<?= $i ?>'
+                                             )"> << </button><br>
                                             <font size="4"><strong>Database "<?= $bases[$j]->getDbName() ?>" has:</strong></font><br>
                                             <?php displayResult($compareResult[$j]); ?>
-                                         <?php else: ?>
-                                            <h3>(empty)</h3>
+<!--                                         --><?php //else: ?>
+<!--                                            --><?php //if ($bases[$j]->isEmpty): ?>
+<!--                                                <h3>(empty)</h3>-->
+<!--                                            --><?php //endif; ?>
                                         <?php endif; ?>
                                     </td>
                                 </tr>
