@@ -25,7 +25,7 @@ function join(from, to, id) {
         data: data,
         statusCode: {
             200: function () {
-                // location.reload();
+                location.reload();
             },
             400: function () {
                 joinRequestErrors();
