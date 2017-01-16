@@ -17,7 +17,7 @@ class Request extends Object
 
     public function redirect($url, $code = 302)
     {
-        header("Location: {$url} ", true, $code); // HTTP/{$this->version}
+        header("Refresh: 0; url={$url} ", true, $code); // HTTP/{$this->version}
         exit();
     }
 

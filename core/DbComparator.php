@@ -21,6 +21,7 @@ use royal\db\mysql\query\QueryBuilder;
  * @property string $username
  * @property string $database
  * @property string $password
+ * @property bool   $isEmpty
  */
 class DbComparator extends Object
 {
@@ -159,29 +160,29 @@ class DbComparator extends Object
 
     public function join(DbComparator $joining)
     {
-        $diff = $this->compare($joining);
-        if ($diff) {
-            foreach ($diff as $table => $columns) {
-                if (is_string($columns)) {
-                    $this->createTable($columns, $joining);
-                } elseif (is_array($columns)) {
-                    //alter table
-                    foreach ($columns as $name => $column) {
-                        if (is_string($column)) {
-                        // creating column
-                        } elseif (is_array($column)) {
-                            // alter column
-                            foreach ($column as $prop => $type) {
-                                if (is_string($type)) {
-                                    // alter type
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+        if ($this->compare($joining)) {
+            return $this->dumpBase($joining);
+//            foreach ($diff as $table => $columns) {
+//                if (is_string($columns)) {
+//                    $this->createTable($columns, $joining);
+//                } elseif (is_array($columns)) {
+//                    //alter table
+//                    foreach ($columns as $name => $column) {
+//                        if (is_string($column)) {
+//                        // creating column
+//                        } elseif (is_array($column)) {
+//                            // alter column
+//                            foreach ($column as $prop => $type) {
+//                                if (is_string($type)) {
+//                                    // alter type
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
         }
-        echo '<pre>'; var_dump($diff); die;
+        return true;
     }
 
     protected function getErrors()
@@ -219,24 +220,8 @@ class DbComparator extends Object
         $request = "CREATE TABLE IF NOT EXISTS `{$tableName}` ( {$columns} " . ($keys ? ", {$keys}" : " ") . ") {$params} ";
         $sql     = new MySql($updating->host, $updating->username, $updating->database, $updating->password);
         $query   = new QueryBuilder($sql);
-        echo '<pre>';
-//        echo '<pre>'; var_dump($request); die;
 
-//        $console = (new Console())->mysqldump(
-//            "--no-data",
-//            "--user='hookah'" . (!$this->password ? " -p " : ""),
-//            "--host=192.168.1.175",
-//            "hookah",
-//            "> C:/" . time() . ".sql"
-//        );
-        echo '<pre>'; var_dump(1); die;
-        $res = $console->execute[0];
-        echo '<pre>'; var_dump($res); die;
-        $res = $console->command("XXcDaHqImKA8Yo2m")->execute[0];
-        if ($this->password) {
-            $res = $console->command($this->password)->execute[0];
-        }
-        echo '<pre>'; var_dump($res); die;
+        echo '<pre>'; var_dump($query); die;
         if (!$query->connection->query($request)) {
             throw new MySqlRequestError($query->connection->error);
         } else {
@@ -272,5 +257,32 @@ class DbComparator extends Object
             }
         }
         return implode(", ", $keys);
+    }
+
+    protected function dumpBase(DbComparator $updating)
+    {
+        $file = Application::basePath() . "/dumps/" . time() . ".sql";
+        (new Console())->mysqldump(
+            "--no-data",
+            "--user='{$this->username}'",
+            $this->password ? " --password='{$this->password}' " : "",
+            "--host={$this->host}",
+            $this->database,
+            "> {$file}"
+        )->execute;
+        (new Console())->mysql(
+            "--user='{$updating->username}'",
+            $updating->password ? " --password='{$updating->password}' " : "",
+            "--host={$updating->host}",
+            $updating->database,
+            "< {$file}"
+        )->execute;
+        unlink($file);
+        return true;
+    }
+
+    protected function getIsEmpty()
+    {
+        return empty($this->_structure);
     }
 }

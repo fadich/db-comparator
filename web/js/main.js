@@ -14,7 +14,7 @@ function hide(i) {
 function join(from, to) {
     console.log(from, to);
 
-    var body = {
+    var data = {
         from: from,
         to: to,
         params: window.location.search
@@ -22,8 +22,15 @@ function join(from, to) {
     $.ajax({
         url: "/main/join",
         type: "POST",
-        data: body,
-        error: joinRequestErrors(),
+        data: data,
+        success: function () {
+            alert('123');
+            location.reload();
+        },
+        error: function() {
+            alert('123');
+            joinRequestErrors();
+        },
         dataType: "json"
     });
 }

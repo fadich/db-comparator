@@ -23,6 +23,7 @@ use royal\type\Matrix;
  * @method BaseConsole ifconfig([$params, ...])    ...
  * @method BaseConsole cd([$params, ...])          etc...
  * @method BaseConsole php([$params, ...])         ...
+ * @method BaseConsole mysql([$params, ...])       ...
  * @method BaseConsole mysqldump([$params, ...])   ...
  *
  * @author Fadi Ahmad
@@ -64,7 +65,7 @@ abstract class BaseConsole extends Interact
     protected function executeAll()
     {
         foreach ($this->_commands as $command) {
-            exec($command, $this->_output[]);
+            $this->_output[] = shell_exec($command);
         }
         return $this;
     }
