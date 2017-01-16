@@ -28,6 +28,6 @@ class MainController extends Controller
         } catch (\Exception $e) {
             $this->redirect('/main/join', 400);
         }
-        $this->redirect('/' . (isset($_POST['params']) ? '?' . $_POST['params'] : ''), $from->join($to) ? 200 : 400);
+        $this->redirect('/' . (isset($_POST['params']) ? $_POST['params'] : ''), $from->join($to) ? 200 : 400);
     }
 }

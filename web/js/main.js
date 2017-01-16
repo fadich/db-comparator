@@ -11,29 +11,40 @@ function hide(i) {
     }
 }
 
-function join(from, to) {
-    // console.log(from, to);
-
+function join(from, to, id) {
     var data = {
         from: from,
         to: to,
         params: window.location.search
     };
+    var elem = document.getElementById(id);
+    switchAttr('disabled', elem);
     $.ajax({
         url: "/main/join",
         type: "POST",
         data: data,
-        success: function () {
-            location.reload();
-        },
-        error: function() {
-            joinRequestErrors();
+        statusCode: {
+            200: function () {
+                // location.reload();
+            },
+            400: function () {
+                joinRequestErrors();
+            }
         },
         complete: function () {
+            switchAttr('disabled', elem);
         }
     });
 }
 
 function joinRequestErrors() {
+    alert('Error!');
+}
 
+function switchAttr(attibute, element) {
+    if (element.hasAttribute(attibute)) {
+        element.removeAttribute(attibute);
+    } else {
+        element.setAttribute(attibute, attibute);
+    }
 }
