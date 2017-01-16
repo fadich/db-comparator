@@ -51,7 +51,7 @@ class Mixed extends BaseType
      *      $this->_value = array ['el_1' => 1, 'el_2' => 2, 'el_3' => 3];
      * 
      *  // with arguments:
-     *      implodeElements('&', ['el_1', 'el_2']);
+     *      implodeElements('&', "=", ['el_1', 'el_2']);
      * 
      *  // will make a string as: "el_1=1&el_2=2";
      * ```     

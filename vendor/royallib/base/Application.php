@@ -25,17 +25,17 @@ final class Application extends Object
 //        ini_set('display_errors', 1);
         self::$request = new Request();
         self::$_baseAppPath = __DIR__ . '/../../../';
-        $con = new static();
-        $con->_url = explode("?", $_SERVER['REQUEST_URI'])[0];
-        $con->_controller = explode("/", $con->_url)[1] ?? '';
-        $con->_action   = explode("/", $con->_url)[2] ?? '';
-        try {
-            $con->call();
-        } catch (BadRequestException $exception) {
-            Application::$request->redirect('', 404);
-        } catch (\Throwable $throwable) {
-            throw $throwable;
-        }
+        $app = new static();
+        $app->_url = explode("?", $_SERVER['REQUEST_URI'])[0];
+        $app->_controller = explode("/", $app->_url)[1] ?? '';
+        $app->_action   = explode("/", $app->_url)[2] ?? '';
+//        try {
+            $app->call();
+//        } catch (BadRequestException $exception) {
+//            Application::$request->redirect('', 404);
+//        } catch (\Throwable $throwable) {
+//            throw $throwable;
+//        }
     }
 
     public static function basePath()
