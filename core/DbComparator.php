@@ -3,6 +3,8 @@
 namespace comparator\core;
 
 
+use royal\base\Application;
+use royal\base\console\Console;
 use royal\base\Object;
 use royal\db\mysql\exception\MySqlRequestError;
 use royal\db\mysql\MySql;
@@ -210,6 +212,7 @@ class DbComparator extends Object
     protected function createTable($tableName, DbComparator $updating)
     {
         $table   = $this->_structure[$tableName];
+
         $columns = $this->columnStructure($table);
         $keys    = $this->getTableKeys($table);
         $params  = "";
@@ -217,7 +220,23 @@ class DbComparator extends Object
         $sql     = new MySql($updating->host, $updating->username, $updating->database, $updating->password);
         $query   = new QueryBuilder($sql);
         echo '<pre>';
-        echo '<pre>'; var_dump($request); die;
+//        echo '<pre>'; var_dump($request); die;
+
+//        $console = (new Console())->mysqldump(
+//            "--no-data",
+//            "--user='hookah'" . (!$this->password ? " -p " : ""),
+//            "--host=192.168.1.175",
+//            "hookah",
+//            "> C:/" . time() . ".sql"
+//        );
+        echo '<pre>'; var_dump(1); die;
+        $res = $console->execute[0];
+        echo '<pre>'; var_dump($res); die;
+        $res = $console->command("XXcDaHqImKA8Yo2m")->execute[0];
+        if ($this->password) {
+            $res = $console->command($this->password)->execute[0];
+        }
+        echo '<pre>'; var_dump($res); die;
         if (!$query->connection->query($request)) {
             throw new MySqlRequestError($query->connection->error);
         } else {
