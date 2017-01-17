@@ -27,12 +27,12 @@ final class Application extends Object
         self::$_baseAppPath = __DIR__ . '/../../../';
         $app = new static();
         $app->_url = explode("?", $_SERVER['REQUEST_URI'])[0];
-        $app->_controller = explode("/", $app->_url)[1] ?? '';
-        $app->_action   = explode("/", $app->_url)[2] ?? '';
+        $app->_controller = explode('/', $app->_url)[1] ?? '';
+        $app->_action   = explode('/', $app->_url)[2] ?? '';
 //        try {
             $app->call();
 //        } catch (BadRequestException $exception) {
-//            Application::$request->redirect('', 404);
+//            Application::$request->redirect('/', 404);
 //        } catch (\Throwable $throwable) {
 //            throw $throwable;
 //        }
@@ -49,12 +49,12 @@ final class Application extends Object
             try {
                 $controller = new $this->controllerClass;
             } catch (\Error $error) {
-                throw new BadRequestException("Unknown controller {$this->_controller}");
+                throw new BadRequestException("Unknown controller \"{$this->_controller}\"");
             }
             if ($this->_action) {
                 $scenario = "a{$this->_action}";
                 if (!method_exists($controller, $scenario)) {
-                    throw new BadRequestException("Unknown scenario {$this->_controller}/{$this->_action}");
+                    throw new BadRequestException("Unknown action \"{$this->_controller}/{$this->_action}\"");
                 }
                 return $controller->$scenario();
             }
