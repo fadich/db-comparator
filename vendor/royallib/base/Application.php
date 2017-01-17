@@ -22,7 +22,21 @@ final class Application extends Object
 
     public static function run()
     {
-//        ini_set('display_errors', 1);
+        if (isset($_SERVER)) {
+            self::runBrowser();
+        } else {
+            self::runConsole();
+        }
+    }
+
+    public static function basePath()
+    {
+        return self::$_baseAppPath;
+    }
+
+    private static function runBrowser()
+    {
+        //        ini_set('display_errors', 1);
         self::$request = new Request();
         self::$_baseAppPath = __DIR__ . '/../../../';
         $app = new static();
@@ -30,7 +44,7 @@ final class Application extends Object
         $app->_controller = explode('/', $app->_url)[1] ?? '';
         $app->_action   = explode('/', $app->_url)[2] ?? '';
 //        try {
-            $app->call();
+        $app->call();
 //        } catch (BadRequestException $exception) {
 //            Application::$request->redirect('/', 404);
 //        } catch (\Throwable $throwable) {
@@ -38,9 +52,8 @@ final class Application extends Object
 //        }
     }
 
-    public static function basePath()
+    private static function runConsole()
     {
-        return self::$_baseAppPath;
     }
 
     private function call()
