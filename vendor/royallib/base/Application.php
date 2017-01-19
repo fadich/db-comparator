@@ -36,9 +36,12 @@ final class Application extends Object
 
     private static function runBrowser()
     {
-        //        ini_set('display_errors', 1);
+        if ('DEBUG_MODE_ENABLED') {
+            ini_set('display_errors', 1);
+        }
         self::$request = new Request();
         self::$_baseAppPath = __DIR__ . '/../../../';
+
         $app = new static();
         $app->_url = explode("?", $_SERVER['REQUEST_URI'])[0];
         $app->_controller = explode('/', $app->_url)[1] ?? '';
